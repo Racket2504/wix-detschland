@@ -1,0 +1,49 @@
+name: WIX Daten aktualisieren
+
+# Wann läuft der Workflow?
+on:
+  # Automatisch: jeden 1. des Monats um 08:00 UTC
+  schedule:
+    - cron: '0 8 1 * *'
+
+  # Manuell: über GitHub → Actions → "Run workflow"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Damit der Bot commiten darf
+
+    steps:
+      # 1. Repository auschecken
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      # 2. Python einrichten
+      - name: Python 3.11 einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3. Abhängigkeiten installieren
+      - name: Abhängigkeiten installieren
+        run: pip install -r requirements.txt
+
+      # 4. WIX-Daten holen und HTML aktualisieren
+      - name: WIX-Daten aktualisieren
+        run: python fetch_wix.py
+
+      # 5. Änderungen committen (nur wenn es welche gibt)
+      - name: Änderungen committen und pushen
+        run: |
+          git config user.name  "WIX-Bot"
+          git config user.email "wix-bot@users.noreply.github.com"
+          git add index.html wix-data.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — nichts zu committen."
+          else
+            git commit -m "WIX-Update $(date +%Y-%m-%d): Neue Quartalsdaten"
+            git push
+          fi
