@@ -347,6 +347,7 @@ function rMtbl(){
 
 window.addEventListener('load',function(){
   bGauge(WIX_CURRENT);
+  document.getElementById('wv').textContent = WIX_CURRENT;
   if(typeof Chart!=='undefined'){iMain();iTrend();}
   else{console.error('Chart.js fehlt!');}
   rZones();rMtbl();rInds();
