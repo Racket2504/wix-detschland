@@ -2,634 +2,354 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WIX Deutschland — Wirtschafts-Index v2.0</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WIX Deutschland — Wirtschafts-Index</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#FAFAF8;--surface:#FFFFFF;--surface2:#F4F3EE;
-  --text:#12110F;--text2:#6B6960;--text3:#9E9C96;
-  --accent:#1E4FAC;--accent2:#2A5FAC;
-  --border:#E3E2DB;--border2:#CCC9BF;
-  --c-green:#1baf7a;--c-lgreen:#3B6D11;--c-bggreen:#EAF3DE;
-  --c-lgree:#85b840;
-  --c-orange:#d4880a;--c-bgorange:#FEF3DC;
-  --c-red:#e34948;--c-bgred:#FCEBEB;
-  --c-dred:#8B0000;--c-bgdred:#F5D5D5;
-  --radius:4px;--shadow:0 1px 4px rgba(0,0,0,.07);
-}
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.6}
-.container{max-width:1080px;margin:0 auto;padding:0 24px}
-
-/* ── Header ── */
-.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-.site-header .container{display:flex;align-items:center;height:56px;gap:32px}
-.logo{font-family:Georgia,'Times New Roman',serif;font-size:18px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:-.3px;flex-shrink:0}
-.logo span{color:var(--accent)}
-.site-nav{display:flex;gap:24px;flex:1}
-.site-nav a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
-.site-nav a:hover{color:var(--text);border-bottom-color:var(--accent)}
-.lang-switch{display:flex;gap:2px;flex-shrink:0}
-.lang-switch button{background:none;border:1px solid var(--border);border-radius:3px;padding:3px 10px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);transition:all .15s}
-.lang-switch button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-
-/* ── Hero ── */
-.hero{padding:64px 0 56px;border-bottom:1px solid var(--border)}
-.hero__inner{display:grid;grid-template-columns:340px 1fr;gap:56px;align-items:center}
-.hero__gauge-wrap{display:flex;flex-direction:column;align-items:center}
-.hero__gauge svg{width:100%;max-width:320px}
-.hero__gauge-legend{display:flex;flex-direction:column;gap:4px;margin-top:8px;width:100%;max-width:280px}
-.hero__gauge-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text2)}
-.hero__gauge-legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.hero__text{}
-.hero__eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
-.hero__value{font-family:Georgia,'Times New Roman',serif;font-size:80px;font-weight:700;line-height:1;color:var(--text);margin-bottom:4px}
-.hero__value-label{font-size:13px;color:var(--text2);margin-bottom:20px}
-.hero__zone-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:20px}
-.hero__desc{font-size:15px;color:var(--text2);line-height:1.65;max-width:480px}
-.hero__meta{margin-top:20px;font-size:12px;color:var(--text3);display:flex;gap:16px}
-.hero__meta strong{color:var(--text2)}
-
-/* ── Sections ── */
-.section{padding:64px 0;border-bottom:1px solid var(--border)}
-.section:last-child{border-bottom:none}
-.section__header{margin-bottom:36px}
-.section__eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
-.section__title{font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px}
-.section__desc{font-size:15px;color:var(--text2);max-width:640px;line-height:1.65}
-
-/* ── Charts ── */
-.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:24px;position:relative}
-.chart-wrap canvas{max-height:320px}
-.chart-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:12px}
-.chart-legend{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap}
-.chart-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
-.chart-legend-line{width:24px;height:3px;border-radius:2px}
-
-/* ── Indicators grid ── */
-.indicators-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.indicator-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 18px}
-.indicator-card__header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
-.indicator-card__name{font-size:13px;font-weight:700;color:var(--text)}
-.indicator-card__weight{font-size:11px;font-weight:700;padding:2px 7px;border-radius:3px;background:var(--surface2);color:var(--text2)}
-.indicator-card__sub{font-size:11px;color:var(--text3);margin-bottom:10px}
-.indicator-card__value{font-family:'Courier New',Courier,monospace;font-size:24px;font-weight:700;margin-bottom:8px}
-.indicator-card canvas{max-height:70px}
-
-/* ── Zones ── */
-.zones-grid{display:flex;flex-direction:column;gap:10px}
-.zone-card{display:grid;grid-template-columns:90px 1fr;gap:0;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
-.zone-card__badge{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 12px;text-align:center}
-.zone-card__range{font-family:'Courier New',Courier,monospace;font-size:18px;font-weight:700;color:#fff;line-height:1}
-.zone-card__label{font-size:10px;font-weight:700;color:rgba(255,255,255,.8);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
-.zone-card__body{padding:14px 18px;background:var(--surface)}
-.zone-card__title{font-size:14px;font-weight:700;margin-bottom:4px}
-.zone-card__desc{font-size:13px;color:var(--text2);line-height:1.5}
-.zone-card__example{font-size:11px;color:var(--text3);margin-top:6px;font-style:italic}
-
-/* ── Methodology ── */
-.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
-.method-table{width:100%;border-collapse:collapse;font-size:13px}
-.method-table th{text-align:left;padding:8px 10px;border-bottom:2px solid var(--border2);color:var(--text2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
-.method-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
-.method-table tr:last-child td{border-bottom:none}
-.method-table tr:hover td{background:var(--surface2)}
-.formula-block{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 18px;font-family:'Courier New',Courier,monospace;font-size:12px;color:var(--text);line-height:1.8;white-space:pre-line}
-.sources-list{list-style:none;font-size:13px;color:var(--text2)}
-.sources-list li{padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:10px}
-.sources-list li::before{content:'→';color:var(--text3);flex-shrink:0}
-
-/* ── Footer ── */
-footer{background:var(--surface2);border-top:1px solid var(--border);padding:40px 0}
-.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px}
-.footer-brand{font-family:Georgia,'Times New Roman',serif;font-size:16px;font-weight:700;margin-bottom:8px}
-.footer-brand span{color:var(--accent)}
-.footer-desc{font-size:13px;color:var(--text2);line-height:1.6}
-.footer-col-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
-.footer-links{list-style:none;display:flex;flex-direction:column;gap:6px}
-.footer-links a{color:var(--text2);text-decoration:none;font-size:13px;transition:color .15s}
-.footer-links a:hover{color:var(--accent)}
-.footer-bottom{margin-top:32px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text3)}
-.disclaimer{margin-top:12px;font-size:11px;color:var(--text3);line-height:1.5}
-
-/* ── Divider ── */
-hr.section-rule{border:none;border-top:1px solid var(--border);margin:32px 0}
-
-/* ── Responsive ── */
-@media(max-width:768px){
-  .hero__inner{grid-template-columns:1fr;gap:32px}
-  .hero__gauge-wrap{align-items:center}
-  .hero__value{font-size:56px}
-  .site-nav{display:none}
-  .method-grid{grid-template-columns:1fr}
-  .footer-inner{grid-template-columns:1fr}
-  .indicators-grid{grid-template-columns:1fr}
-  .zone-card{grid-template-columns:70px 1fr}
-}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAFAF8;color:#12110F;line-height:1.6}
+.c{max-width:1080px;margin:0 auto;padding:0 24px}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(250,250,248,.96);backdrop-filter:blur(8px);border-bottom:1px solid #E3E2DB}
+.hdr .c{display:flex;align-items:center;height:56px;gap:24px}
+.logo{font-family:Georgia,serif;font-size:18px;font-weight:700}
+.logo span{color:#1E4FAC}
+.nav{display:flex;gap:20px;flex:1}
+.nav a{font-size:14px;font-weight:500;color:#6B6960;padding:4px 0;border-bottom:2px solid transparent;transition:.15s;text-decoration:none}
+.nav a:hover{color:#12110F;border-color:#1E4FAC}
+.lng{display:flex;gap:2px}
+.lng button{background:none;border:1px solid #E3E2DB;border-radius:3px;padding:3px 10px;font-size:13px;font-weight:600;cursor:pointer;color:#6B6960}
+.lng button.on{background:#1E4FAC;color:#fff;border-color:#1E4FAC}
+.hero{padding:60px 0 50px;border-bottom:1px solid #E3E2DB}
+.hi{display:grid;grid-template-columns:320px 1fr;gap:48px;align-items:center}
+.gw{display:flex;flex-direction:column;align-items:center;gap:10px}
+.gw svg{width:100%;max-width:300px}
+.gl{display:flex;flex-direction:column;gap:5px;width:100%;max-width:260px}
+.gli{display:flex;align-items:center;gap:8px;font-size:11px;color:#6B6960}
+.gld{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.eye{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9E9C96;margin-bottom:8px}
+.wn{font-family:Georgia,serif;font-size:80px;font-weight:700;line-height:1;margin-bottom:4px}
+.ws{font-size:13px;color:#6B6960;margin-bottom:18px}
+.zb{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:18px}
+.hd{font-size:15px;color:#6B6960;line-height:1.65;max-width:480px}
+.hm{margin-top:18px;font-size:12px;color:#9E9C96;display:flex;gap:16px;flex-wrap:wrap}
+.hm strong{color:#6B6960}
+.sec{padding:60px 0;border-bottom:1px solid #E3E2DB}
+.sec-t{font-family:Georgia,serif;font-size:28px;font-weight:700;margin-bottom:10px}
+.sec-d{font-size:15px;color:#6B6960;max-width:640px;line-height:1.65;margin-bottom:28px}
+.cc{background:#fff;border:1px solid #E3E2DB;border-radius:6px;padding:20px}
+.cc canvas{max-height:290px}
+.cl{display:flex;gap:18px;margin-top:12px;flex-wrap:wrap}
+.cli{display:flex;align-items:center;gap:6px;font-size:12px;color:#6B6960}
+.cll{width:22px;height:3px;border-radius:2px}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px}
+.ic{background:#fff;border:1px solid #E3E2DB;border-radius:6px;padding:13px 15px}
+.it{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px}
+.in{font-size:13px;font-weight:700}
+.iw{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;background:#F4F3EE;color:#6B6960}
+.iu{font-size:11px;color:#9E9C96;margin-bottom:8px}
+.iv{font-family:'Courier New',monospace;font-size:22px;font-weight:700;margin-bottom:6px}
+.ic canvas{max-height:58px}
+.zs{display:flex;flex-direction:column;gap:8px}
+.zc{display:grid;grid-template-columns:80px 1fr;border-radius:6px;overflow:hidden;border:1px solid #E3E2DB}
+.zb2{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;text-align:center}
+.zr{font-family:'Courier New',monospace;font-size:15px;font-weight:700;color:#fff;line-height:1}
+.zl{font-size:9px;font-weight:700;color:rgba(255,255,255,.8);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.zbd{padding:12px 16px;background:#fff}
+.zt{font-size:13px;font-weight:700;margin-bottom:3px}
+.zd{font-size:12px;color:#6B6960;line-height:1.5}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.mt{width:100%;border-collapse:collapse;font-size:13px}
+.mt th{text-align:left;padding:7px 8px;border-bottom:2px solid #CCC9BF;color:#6B6960;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.mt td{padding:7px 8px;border-bottom:1px solid #E3E2DB}
+.mt tr:last-child td{border:none}
+.fml{background:#F4F3EE;border:1px solid #E3E2DB;border-radius:6px;padding:14px 16px;font-family:'Courier New',monospace;font-size:11.5px;line-height:1.8;white-space:pre-line}
+.sl{list-style:none;font-size:13px;color:#6B6960}
+.sl li{padding:4px 0;border-bottom:1px solid #E3E2DB;display:flex;gap:8px}
+.sl li::before{content:'\2192';color:#9E9C96;flex-shrink:0}
+footer{background:#F4F3EE;border-top:1px solid #E3E2DB;padding:36px 0}
+.fi{display:grid;grid-template-columns:2fr 1fr 1fr;gap:28px}
+.fb{font-family:Georgia,serif;font-size:16px;font-weight:700;margin-bottom:6px}
+.fb span{color:#1E4FAC}
+.fd{font-size:13px;color:#6B6960;line-height:1.6}
+.fct{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9E9C96;margin-bottom:10px}
+.fl{list-style:none;display:flex;flex-direction:column;gap:6px}
+.fl a{color:#6B6960;font-size:13px;text-decoration:none}
+.fl a:hover{color:#1E4FAC}
+.fbot{margin-top:28px;padding-top:16px;border-top:1px solid #E3E2DB;display:flex;justify-content:space-between;font-size:12px;color:#9E9C96}
+.disc{margin-top:10px;font-size:11px;color:#9E9C96;line-height:1.5}
+@media(max-width:720px){.hi{grid-template-columns:1fr}.wn{font-size:56px}.nav{display:none}.mg{grid-template-columns:1fr}.fi{grid-template-columns:1fr}.zc{grid-template-columns:70px 1fr}}
 </style>
 </head>
 <body>
 
-<!-- ── HEADER ────────────────────────────────────────────────────────────── -->
-<header class="site-header">
-  <div class="container">
-    <a href="#" class="logo">WIX<span>.</span>de</a>
-    <nav class="site-nav">
-      <a href="#aktuell"     data-de="Aktuell"       data-en="Current">Aktuell</a>
-      <a href="#verlauf"     data-de="Verlauf"        data-en="History">Verlauf</a>
-      <a href="#indikatoren" data-de="Indikatoren"    data-en="Indicators">Indikatoren</a>
-      <a href="#schwellen"   data-de="Schwellenwerte" data-en="Thresholds">Schwellenwerte</a>
-      <a href="#methodik"    data-de="Methodik"       data-en="Methodology">Methodik</a>
-    </nav>
-    <div class="lang-switch">
-      <button id="btn-de" class="active" onclick="setLang('de')">DE</button>
-      <button id="btn-en"               onclick="setLang('en')">EN</button>
+<header class="hdr"><div class="c">
+  <div class="logo">WIX<span>.</span>de</div>
+  <nav class="nav">
+    <a href="#aktuell" data-de="Aktuell" data-en="Current">Aktuell</a>
+    <a href="#verlauf" data-de="Verlauf" data-en="History">Verlauf</a>
+    <a href="#indikatoren" data-de="Indikatoren" data-en="Indicators">Indikatoren</a>
+    <a href="#schwellen" data-de="Schwellenwerte" data-en="Thresholds">Schwellenwerte</a>
+    <a href="#methodik" data-de="Methodik" data-en="Methodology">Methodik</a>
+  </nav>
+  <div class="lng">
+    <button id="btn-de" class="on" onclick="setLang('de')">DE</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</div></header>
+
+<section id="aktuell" class="hero"><div class="c"><div class="hi">
+  <div class="gw">
+    <svg id="gsv" viewBox="0 0 300 175" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="gl">
+      <div class="gli"><div class="gld" style="background:#1baf7a"></div><span data-de="Gesund &ge;70" data-en="Healthy &ge;70">Gesund &ge;70</span></div>
+      <div class="gli"><div class="gld" style="background:#85b840"></div><span data-de="Stabil 55-70" data-en="Stable 55-70">Stabil 55-70</span></div>
+      <div class="gli"><div class="gld" style="background:#d4880a"></div><span data-de="Warnung 42-55" data-en="Warning 42-55">Warnung 42-55</span></div>
+      <div class="gli"><div class="gld" style="background:#e34948"></div><span data-de="Kritisch 30-42" data-en="Critical 30-42">Kritisch 30-42</span></div>
+      <div class="gli"><div class="gld" style="background:#8B0000"></div><span data-de="Systemkrise &lt;30" data-en="Crisis &lt;30">Systemkrise &lt;30</span></div>
     </div>
   </div>
-</header>
-
-<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
-<section id="aktuell" class="hero">
-  <div class="container">
-    <div class="hero__inner">
-
-      <!-- Gauge -->
-      <div class="hero__gauge-wrap">
-        <svg id="gauge-svg" viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg"></svg>
-        <div class="hero__gauge-legend">
-          <div class="hero__gauge-legend-item"><div class="hero__gauge-legend-dot" style="background:#1baf7a"></div><span data-de="Gesund ≥ 70" data-en="Healthy ≥ 70">Gesund ≥ 70</span></div>
-          <div class="hero__gauge-legend-item"><div class="hero__gauge-legend-dot" style="background:#85b840"></div><span data-de="Stabil 55–70" data-en="Stable 55–70">Stabil 55–70</span></div>
-          <div class="hero__gauge-legend-item"><div class="hero__gauge-legend-dot" style="background:#d4880a"></div><span data-de="Warnung 42–55" data-en="Warning 42–55">Warnung 42–55</span></div>
-          <div class="hero__gauge-legend-item"><div class="hero__gauge-legend-dot" style="background:#e34948"></div><span data-de="Kritisch 30–42" data-en="Critical 30–42">Kritisch 30–42</span></div>
-          <div class="hero__gauge-legend-item"><div class="hero__gauge-legend-dot" style="background:#8B0000"></div><span data-de="Systemkrise &lt; 30" data-en="System Crisis &lt; 30">Systemkrise &lt; 30</span></div>
-        </div>
-      </div>
-
-      <!-- Text -->
-      <div class="hero__text">
-        <div class="hero__eyebrow" data-de="Wirtschafts-Index Deutschland" data-en="Germany Economic Index">Wirtschafts-Index Deutschland</div>
-        <div class="hero__value" id="hero-wix-value">55</div>
-        <div class="hero__value-label" id="hero-wix-period" data-de="WIX-Wert Q1 2026 · Skala 0–100" data-en="WIX Value Q1 2026 · Scale 0–100">WIX-Wert Q1 2026 · Skala 0–100</div>
-        <div class="hero__zone-badge" style="background:var(--c-bgorange);color:var(--c-orange)">
-          <span>⚠</span>
-          <span data-de="Warnzone — strukturelle Defizite entstehen" data-en="Warning Zone — structural deficits emerging">Warnzone — strukturelle Defizite entstehen</span>
-        </div>
-        <p class="hero__desc" data-de="Der WIX (Wirtschafts-Index) fasst 7 harte Kennzahlen der deutschen Wirtschaft zu einer einzigen Zahl zusammen. Ein Wert von 55 signalisiert: Die Wirtschaft ist nicht in der Krise, aber wächst zu langsam, um die demographische Mehrbelastung der nächsten Dekade zu tragen." data-en="The WIX (Economic Index) aggregates 7 hard economic indicators of the German economy into a single number. A value of 55 signals: the economy is not in crisis, but growing too slowly to carry the demographic burden of the coming decade.">
-          Der WIX (Wirtschafts-Index) fasst 7 harte Kennzahlen der deutschen Wirtschaft zu einer einzigen Zahl zusammen. Ein Wert von 55 signalisiert: Die Wirtschaft ist nicht in der Krise, aber wächst zu langsam, um die demographische Mehrbelastung der nächsten Dekade zu tragen.
-        </p>
-        <div class="hero__meta">
-          <span><strong data-de="Stand:" data-en="As of:">Stand:</strong> Q1 2026</span>
-          <span><strong data-de="Aktualisierung:" data-en="Update:">Aktualisierung:</strong> <span data-de="Quartalsweise" data-en="Quarterly">Quartalsweise</span></span>
-          <span><strong data-de="Basis:" data-en="Basis:">Basis:</strong> Destatis, BA, Eurostat</span>
-        </div>
-      </div>
-
+  <div>
+    <div class="eye" data-de="Wirtschafts-Index Deutschland" data-en="Germany Economic Index">Wirtschafts-Index Deutschland</div>
+    <div class="wn" id="wv">55</div>
+    <div class="ws" data-de="WIX-Wert Q1 2026 &middot; Skala 0-100" data-en="WIX Q1 2026 &middot; Scale 0-100">WIX-Wert Q1 2026 &middot; Skala 0-100</div>
+    <div class="zb" style="background:#FEF3DC;color:#d4880a">&#9888; <span data-de="Warnzone - strukturelle Defizite entstehen" data-en="Warning - structural deficits emerging">Warnzone - strukturelle Defizite entstehen</span></div>
+    <p class="hd" data-de="Der WIX fasst 12 harte Kennzahlen der deutschen Wirtschaft zusammen. 9 Indikatoren werden monatlich aktualisiert. Ein Wert von 55 signalisiert strukturelle Schwaeche ohne akute Krise." data-en="The WIX aggregates 12 hard indicators of the German economy. 9 are updated monthly. A value of 55 signals structural weakness without acute crisis.">Der WIX fasst 12 harte Kennzahlen der deutschen Wirtschaft zusammen. 9 Indikatoren werden monatlich aktualisiert. Ein Wert von 55 signalisiert strukturelle Schwaeche ohne akute Krise.</p>
+    <div class="hm">
+      <span><strong data-de="Stand:" data-en="As of:">Stand:</strong> Q1 2026</span>
+      <span><strong data-de="Update:" data-en="Update:">Update:</strong> <span data-de="Monatlich" data-en="Monthly">Monatlich</span></span>
+      <span><strong>Basis:</strong> Destatis, BA, Eurostat</span>
     </div>
   </div>
-</section>
+</div></div></section>
 
-<!-- ── HISTORISCHER VERLAUF ───────────────────────────────────────────────── -->
-<section id="verlauf" class="section">
-  <div class="container">
-    <div class="section__header">
-      <div class="section__eyebrow" data-de="20 Jahre Überblick" data-en="20 Year Overview">20 Jahre Überblick</div>
-      <h2 class="section__title" data-de="Historischer WIX-Verlauf 2006–2026" data-en="Historical WIX 2006–2026">Historischer WIX-Verlauf 2006–2026</h2>
-      <p class="section__desc" data-de="80 Quartale — von der Finanzkrise 2009 über den Boom 2017 bis zur aktuellen strukturellen Schwäche. Grüne Zone = gesunde Wirtschaft, rote Zone = Systemrisiko." data-en="80 quarters — from the 2009 financial crisis through the 2017 boom to today's structural weakness. Green zone = healthy economy, red zone = systemic risk.">80 Quartale — von der Finanzkrise 2009 über den Boom 2017 bis zur aktuellen strukturellen Schwäche. Grüne Zone = gesunde Wirtschaft, rote Zone = Systemrisiko.</p>
-    </div>
-    <div class="chart-wrap">
-      <canvas id="chartMain" height="300"></canvas>
-      <div class="chart-legend">
-        <div class="chart-legend-item"><div class="chart-legend-line" style="background:#1E4FAC"></div><span data-de="WIX-Wert" data-en="WIX Value">WIX-Wert</span></div>
-        <div class="chart-legend-item"><div class="chart-legend-line" style="background:#1baf7a;opacity:.4;height:10px"></div><span data-de="Gesund (≥70)" data-en="Healthy (≥70)">Gesund (≥70)</span></div>
-        <div class="chart-legend-item"><div class="chart-legend-line" style="background:#d4880a;opacity:.4;height:10px"></div><span data-de="Warnung (42–55)" data-en="Warning (42–55)">Warnung (42–55)</span></div>
-        <div class="chart-legend-item"><div class="chart-legend-line" style="background:#e34948;opacity:.4;height:10px"></div><span data-de="Kritisch/Krise (<42)" data-en="Critical/Crisis (<42)">Kritisch/Krise (&lt;42)</span></div>
-      </div>
+<section id="verlauf" class="sec"><div class="c">
+  <div class="eye" data-de="20 Jahre Uberblick" data-en="20 Year Overview">20 Jahre Uberblick</div>
+  <h2 class="sec-t" data-de="Historischer WIX-Verlauf 2006-2026" data-en="Historical WIX 2006-2026">Historischer WIX-Verlauf 2006-2026</h2>
+  <p class="sec-d" data-de="80 Quartale - von der Finanzkrise 2009 ueber den Boom 2017 bis zur aktuellen strukturellen Schwaache." data-en="80 quarters - from the 2009 financial crisis through the 2017 boom to today.">80 Quartale - von der Finanzkrise 2009 ueber den Boom 2017 bis zur aktuellen strukturellen Schwaache.</p>
+  <div class="cc"><canvas id="cm" height="280"></canvas>
+    <div class="cl">
+      <div class="cli"><div class="cll" style="background:#1E4FAC"></div><span>WIX</span></div>
+      <div class="cli"><div class="cll" style="background:#1baf7a;height:10px;opacity:.3"></div><span data-de="Gesund &ge;70" data-en="Healthy &ge;70">Gesund &ge;70</span></div>
+      <div class="cli"><div class="cll" style="background:#d4880a;height:10px;opacity:.3"></div><span data-de="Warnung 42-55" data-en="Warning 42-55">Warnung 42-55</span></div>
+      <div class="cli"><div class="cll" style="background:#8B0000;height:10px;opacity:.3"></div><span data-de="Krise &lt;30" data-en="Crisis &lt;30">Krise &lt;30</span></div>
     </div>
   </div>
-</section>
+</div></section>
 
-<!-- ── TREND 2017-2026 ───────────────────────────────────────────────────── -->
-<section id="trend" class="section">
-  <div class="container">
-    <div class="section__header">
-      <div class="section__eyebrow" data-de="Strukturanalyse" data-en="Structural Analysis">Strukturanalyse</div>
-      <h2 class="section__title" data-de="Struktureller Trend 2017–2026 (ohne COVID)" data-en="Structural Trend 2017–2026 (ex COVID)">Struktureller Trend 2017–2026 (ohne COVID)</h2>
-      <p class="section__desc" data-de="Die orange Trendlinie zeigt den strukturellen Rückgang unabhängig von externen Schocks. COVID-Periode (grau) wurde aus der Trendberechnung ausgeschlossen." data-en="The orange trend line shows structural decline independent of external shocks. The COVID period (grey) was excluded from trend calculation.">Die orange Trendlinie zeigt den strukturellen Rückgang unabhängig von externen Schocks. COVID-Periode (grau) wurde aus der Trendberechnung ausgeschlossen.</p>
-    </div>
-    <div class="chart-wrap">
-      <canvas id="chartTrend" height="260"></canvas>
-      <div class="chart-legend">
-        <div class="chart-legend-item"><div class="chart-legend-line" style="background:#1E4FAC"></div><span data-de="WIX bereinigt" data-en="WIX adjusted">WIX bereinigt</span></div>
-        <div class="chart-legend-item"><div class="chart-legend-line" style="background:#ccc"></div><span data-de="COVID + Energiekrise" data-en="COVID + Energy Crisis">COVID + Energiekrise</span></div>
-        <div class="chart-legend-item"><div class="chart-legend-line" style="background:#e6780a;border-top:2px dashed #e6780a;height:0"></div><span data-de="Lineare Trendlinie" data-en="Linear trend line">Lineare Trendlinie</span></div>
-      </div>
+<section id="trend" class="sec"><div class="c">
+  <div class="eye" data-de="Strukturanalyse" data-en="Structural Analysis">Strukturanalyse</div>
+  <h2 class="sec-t" data-de="Struktureller Trend 2017-2026 (ohne COVID)" data-en="Structural Trend 2017-2026 (ex COVID)">Struktureller Trend 2017-2026 (ohne COVID)</h2>
+  <p class="sec-d" data-de="Orange Trendlinie durch bereinigte Daten. COVID-Periode ausgegraut." data-en="Orange trend line through adjusted data. COVID period greyed out.">Orange Trendlinie durch bereinigte Daten. COVID-Periode ausgegraut.</p>
+  <div class="cc"><canvas id="ct" height="250"></canvas>
+    <div class="cl">
+      <div class="cli"><div class="cll" style="background:#1E4FAC"></div><span data-de="WIX bereinigt" data-en="WIX adjusted">WIX bereinigt</span></div>
+      <div class="cli"><div class="cll" style="background:#ccc"></div><span data-de="COVID + Energie" data-en="COVID + Energy">COVID + Energie</span></div>
+      <div class="cli"><div class="cll" style="background:#e6780a"></div><span data-de="Trendlinie" data-en="Trend line">Trendlinie</span></div>
     </div>
   </div>
-</section>
+</div></section>
 
-<!-- ── INDIKATOREN ───────────────────────────────────────────────────────── -->
-<section id="indikatoren" class="section">
-  <div class="container">
-    <div class="section__header">
-      <div class="section__eyebrow" data-de="7 Harte Kennzahlen" data-en="7 Hard Indicators">7 Harte Kennzahlen</div>
-      <h2 class="section__title" data-de="Einzelindikatoren Q1 2026" data-en="Individual Indicators Q1 2026">Einzelindikatoren Q1 2026</h2>
-      <p class="section__desc" data-de="Jede Kennzahl fließt gewichtet in den WIX ein. Verlauf zeigt die letzten 16 Quartale (4 Jahre)." data-en="Each indicator is weighted and feeds into the WIX. Chart shows the last 16 quarters (4 years).">Jede Kennzahl fließt gewichtet in den WIX ein. Verlauf zeigt die letzten 16 Quartale (4 Jahre).</p>
+<section id="indikatoren" class="sec"><div class="c">
+  <div class="eye" data-de="12 Harte Kennzahlen" data-en="12 Hard Indicators">12 Harte Kennzahlen</div>
+  <h2 class="sec-t" data-de="Einzelindikatoren - aktuell" data-en="Individual Indicators - current">Einzelindikatoren - aktuell</h2>
+  <p class="sec-d" data-de="9 Indikatoren monatlich, 3 quartalsweise. Verlauf: letzte 16 Datenpunkte." data-en="9 monthly, 3 quarterly indicators. Chart shows last 16 data points.">9 Indikatoren monatlich, 3 quartalsweise. Verlauf: letzte 16 Datenpunkte.</p>
+  <div class="ig" id="ig"></div>
+</div></section>
+
+<section id="schwellen" class="sec"><div class="c">
+  <div class="eye" data-de="Interpretation" data-en="Interpretation">Interpretation</div>
+  <h2 class="sec-t" data-de="Was bedeutet welcher WIX-Wert?" data-en="What does each WIX value mean?">Was bedeutet welcher WIX-Wert?</h2>
+  <p class="sec-d" data-de="Fuenf Zonen und ihre Bedeutung fuer den deutschen Sozialstaat." data-en="Five zones and their implications for Germany's welfare state.">Fuenf Zonen und ihre Bedeutung fuer den deutschen Sozialstaat.</p>
+  <div class="zs" id="zs"></div>
+</div></section>
+
+<section id="methodik" class="sec"><div class="c">
+  <div class="eye" data-de="Transparenz" data-en="Transparency">Transparenz</div>
+  <h2 class="sec-t" data-de="Methodik &amp; Quellen" data-en="Methodology &amp; Sources">Methodik &amp; Quellen</h2>
+  <p class="sec-d" data-de="Der WIX ist ein konstruierter Index mit subjektiver Gewichtung - transparent dokumentiert." data-en="The WIX is a constructed index with subjective weighting - transparently documented.">Der WIX ist ein konstruierter Index mit subjektiver Gewichtung - transparent dokumentiert.</p>
+  <div class="mg">
+    <div>
+      <h3 style="font-family:Georgia,serif;font-size:16px;margin-bottom:12px" data-de="Gewichtung der 12 Indikatoren" data-en="Weighting of 12 Indicators">Gewichtung der 12 Indikatoren</h3>
+      <table class="mt"><thead><tr>
+        <th data-de="Indikator" data-en="Indicator">Indikator</th>
+        <th data-de="Gew." data-en="Wgt.">Gew.</th>
+        <th data-de="Turnus" data-en="Freq.">Turnus</th>
+      </tr></thead><tbody id="mb"></tbody></table>
     </div>
-    <div class="indicators-grid" id="indicators-grid"></div>
-  </div>
-</section>
+    <div>
+      <h3 style="font-family:Georgia,serif;font-size:16px;margin-bottom:12px" data-de="Scoring-Formeln (0-100 je Indikator)" data-en="Scoring Formulas (0-100 per Indicator)">Scoring-Formeln (0-100 je Indikator)</h3>
+      <div class="fml">BIP:       clamp(50 + YoY/3 x 50, 0, 100)
+Industrie: clamp(50 + YoY/5 x 50, 0, 100)
+Auftraege: clamp(50 + YoY/5 x 50, 0, 100)
+Exporte:   clamp(50 + YoY/4 x 50, 0, 100)
+Handelsb.: clamp(50 + YoY/10 x 50, 0, 100)
+ALQ:       clamp(100 - (r-3) x 17, 0, 100)
+Insolvenz: clamp(50 - YoY/30 x 50, 0, 100)
+Inflation: clamp(100 - |r-2| x 25, 0, 100)
+Einzelhdl: clamp(50 + YoY/4 x 50, 0, 100)
+Bau:       clamp(50 + YoY/5 x 50, 0, 100)
+Produktiv: clamp(50 + YoY/2 x 50, 0, 100)
+Schulden:  clamp(100 - (r-60) x 5, 0, 100)
 
-<!-- ── SCHWELLENWERTE ────────────────────────────────────────────────────── -->
-<section id="schwellen" class="section">
-  <div class="container">
-    <div class="section__header">
-      <div class="section__eyebrow" data-de="Interpretation" data-en="Interpretation">Interpretation</div>
-      <h2 class="section__title" data-de="Was bedeutet welcher WIX-Wert?" data-en="What does each WIX value mean?">Was bedeutet welcher WIX-Wert?</h2>
-      <p class="section__desc" data-de="Fünf Zonen beschreiben den wirtschaftlichen Zustand und seine Auswirkungen auf den deutschen Sozialstaat." data-en="Five zones describe the economic condition and its implications for Germany's welfare state.">Fünf Zonen beschreiben den wirtschaftlichen Zustand und seine Auswirkungen auf den deutschen Sozialstaat.</p>
-    </div>
-    <div class="zones-grid" id="zones-grid"></div>
-  </div>
-</section>
-
-<!-- ── METHODIK ──────────────────────────────────────────────────────────── -->
-<section id="methodik" class="section">
-  <div class="container">
-    <div class="section__header">
-      <div class="section__eyebrow" data-de="Transparenz" data-en="Transparency">Transparenz</div>
-      <h2 class="section__title" data-de="Methodik & Quellen" data-en="Methodology & Sources">Methodik & Quellen</h2>
-      <p class="section__desc" data-de="Der WIX ist ein konstruierter Index mit subjektiver Gewichtung — transparent dokumentiert für eigene Anpassungen." data-en="The WIX is a constructed index with subjective weighting — transparently documented for your own adjustments.">Der WIX ist ein konstruierter Index mit subjektiver Gewichtung — transparent dokumentiert für eigene Anpassungen.</p>
-    </div>
-    <div class="method-grid">
-      <div>
-        <h3 style="font-family:Georgia,serif;font-size:16px;margin-bottom:14px" data-de="Gewichtung der 7 Indikatoren" data-en="Weighting of 7 Indicators">Gewichtung der 7 Indikatoren</h3>
-        <table class="method-table">
-          <thead><tr>
-            <th data-de="Indikator" data-en="Indicator">Indikator</th>
-            <th data-de="Gewicht" data-en="Weight">Gewicht</th>
-            <th data-de="Begründung" data-en="Rationale">Begründung</th>
-          </tr></thead>
-          <tbody id="method-tbody"></tbody>
-        </table>
-      </div>
-      <div>
-        <h3 style="font-family:Georgia,serif;font-size:16px;margin-bottom:14px" data-de="Scoring-Formeln (0–100 je Indikator)" data-en="Scoring Formulas (0–100 per Indicator)">Scoring-Formeln (0–100 je Indikator)</h3>
-        <div class="formula-block">BIP:        clamp(50 + YoY/3 × 50, 0, 100)
-ALQ:        clamp(100 − (r−3) × 17, 0, 100)
-Inflation:  clamp(100 − |r−2| × 25, 0, 100)
-Industrie:  clamp(50 + YoY/5 × 50, 0, 100)
-Einzelhdl.: clamp(50 + YoY/4 × 50, 0, 100)
-Produktiv.: clamp(50 + YoY/2 × 50, 0, 100)
-Schulden:   clamp(100 − (r−60) × 5, 0, 100)
-
-WIX = Σ (Score_i × Gewicht_i)</div>
-        <hr class="section-rule">
-        <h3 style="font-family:Georgia,serif;font-size:16px;margin-bottom:14px" data-de="Datenquellen" data-en="Data Sources">Datenquellen</h3>
-        <ul class="sources-list">
-          <li><span>Destatis (Statistisches Bundesamt) — BIP, Industrie, Einzelhandel, Inflation, Produktivität</span></li>
-          <li><span>Bundesagentur für Arbeit — Arbeitslosenquote</span></li>
-          <li><span>Eurostat / Bundesbank — Staatsschuldenquote</span></li>
-          <li><span data-de="Hinweis: 2006–2015 Jahresdaten, quartalsweise interpoliert." data-en="Note: 2006–2015 annual data, interpolated quarterly.">Hinweis: 2006–2015 Jahresdaten, quartalsweise interpoliert.</span></li>
-        </ul>
-        <hr class="section-rule">
-        <p style="font-size:12px;color:var(--text3);line-height:1.6" data-de="Die Gewichtung ist eine subjektive Entscheidung des Autors, orientiert an der konjunkturellen Relevanz für Deutschland als Exportnation. Andere Gewichtungen sind möglich und können zu abweichenden Indexwerten führen." data-en="The weighting is a subjective choice by the author, oriented towards cyclical relevance for Germany as an export-oriented economy. Other weightings are possible and may lead to different index values.">
-          Die Gewichtung ist eine subjektive Entscheidung des Autors, orientiert an der konjunkturellen Relevanz für Deutschland als Exportnation. Andere Gewichtungen sind möglich und können zu abweichenden Indexwerten führen.
-        </p>
-      </div>
+WIX = Summe (Score_i x Gewicht_i)</div>
+      <br>
+      <h3 style="font-family:Georgia,serif;font-size:16px;margin-bottom:10px" data-de="Datenquellen" data-en="Data Sources">Datenquellen</h3>
+      <ul class="sl">
+        <li>Destatis - BIP, Industrie, Auftraege, Einzelhandel, Inflation, Bau</li>
+        <li>Bundesagentur fuer Arbeit - Arbeitslosenquote, Insolvenzen</li>
+        <li>Eurostat - Exporte, Handelsbilanz, Produktivitaet, Schuldenquote</li>
+      </ul>
     </div>
   </div>
-</section>
+</div></section>
 
-<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
-<footer>
-  <div class="container">
-    <div class="footer-inner">
-      <div>
-        <div class="footer-brand">WIX<span>.</span>de</div>
-        <p class="footer-desc" data-de="Wirtschafts-Index Deutschland — ein unabhängiger, transparenter Composite-Index aus 12 harten Kennzahlen. Keine offizielle Statistik. Keine Anlageberatung." data-en="Germany Economic Index — an independent, transparent composite index from 12 hard indicators. Not an official statistic. Not investment advice.">Wirtschafts-Index Deutschland — ein unabhängiger, transparenter Composite-Index aus 12 harten Kennzahlen. Keine offizielle Statistik. Keine Anlageberatung.</p>
-      </div>
-      <div>
-        <div class="footer-col-title" data-de="Navigation" data-en="Navigation">Navigation</div>
-        <ul class="footer-links">
-          <li><a href="#aktuell"     data-de="Aktuell"       data-en="Current">Aktuell</a></li>
-          <li><a href="#verlauf"     data-de="Verlauf"        data-en="History">Verlauf</a></li>
-          <li><a href="#indikatoren" data-de="Indikatoren"    data-en="Indicators">Indikatoren</a></li>
-          <li><a href="#methodik"    data-de="Methodik"       data-en="Methodology">Methodik</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-col-title" data-de="Quellen" data-en="Sources">Quellen</div>
-        <ul class="footer-links">
-          <li><a href="https://www.destatis.de" target="_blank">Destatis</a></li>
-          <li><a href="https://statistik.arbeitsagentur.de" target="_blank">Bundesagentur f. Arbeit</a></li>
-          <li><a href="https://www.eurostat.ec.europa.eu" target="_blank">Eurostat</a></li>
-          <li><a href="https://www.bundesbank.de" target="_blank">Bundesbank</a></li>
-        </ul>
-      </div>
+<footer><div class="c">
+  <div class="fi">
+    <div><div class="fb">WIX<span>.</span>de</div><p class="fd" data-de="Wirtschafts-Index Deutschland - 12 harte Kennzahlen. Kein offizieller Index. Keine Anlageberatung." data-en="Germany Economic Index - 12 hard indicators. Not official. Not investment advice.">Wirtschafts-Index Deutschland - 12 harte Kennzahlen. Kein offizieller Index. Keine Anlageberatung.</p></div>
+    <div><div class="fct" data-de="Navigation" data-en="Navigation">Navigation</div>
+      <ul class="fl"><li><a href="#aktuell" data-de="Aktuell" data-en="Current">Aktuell</a></li><li><a href="#verlauf" data-de="Verlauf" data-en="History">Verlauf</a></li><li><a href="#indikatoren" data-de="Indikatoren" data-en="Indicators">Indikatoren</a></li><li><a href="#methodik" data-de="Methodik" data-en="Methodology">Methodik</a></li></ul>
     </div>
-    <div class="footer-bottom">
-      <span data-de="© 2026 WIX Deutschland. Alle Angaben ohne Gewähr." data-en="© 2026 WIX Germany. All data without warranty.">© 2026 WIX Deutschland. Alle Angaben ohne Gewähr.</span>
-      <span data-de="Stand: Q1 2026" data-en="As of: Q1 2026">Stand: Q1 2026</span>
+    <div><div class="fct" data-de="Quellen" data-en="Sources">Quellen</div>
+      <ul class="fl"><li><a href="https://www.destatis.de" target="_blank">Destatis</a></li><li><a href="https://statistik.arbeitsagentur.de" target="_blank">Bundesagentur f. Arbeit</a></li><li><a href="https://ec.europa.eu/eurostat" target="_blank">Eurostat</a></li><li><a href="https://www.bundesbank.de" target="_blank">Bundesbank</a></li></ul>
     </div>
-    <p class="disclaimer" data-de="Hinweis: Der WIX ist kein offizieller staatlicher Index und basiert auf frei verfügbaren Daten. Die Gewichtung der Indikatoren ist eine subjektive Entscheidung des Autors. Dieser Index dient ausschließlich der Information und stellt keine Anlageberatung oder wirtschaftspolitische Empfehlung dar." data-en="Disclaimer: The WIX is not an official government index and is based on publicly available data. The weighting of indicators is a subjective decision by the author. This index is for informational purposes only and does not constitute investment advice or economic policy recommendations.">
-      Hinweis: Der WIX ist kein offizieller staatlicher Index und basiert auf frei verfügbaren Daten. Die Gewichtung der Indikatoren ist eine subjektive Entscheidung des Autors. Dieser Index dient ausschließlich der Information und stellt keine Anlageberatung oder wirtschaftspolitische Empfehlung dar.
-    </p>
   </div>
-</footer>
+  <div class="fbot"><span>© 2026 WIX Deutschland. Alle Angaben ohne Gewaehr.</span><span>Stand: Q1 2026</span></div>
+  <p class="disc" data-de="Der WIX ist kein offizieller staatlicher Index. Keine Anlageberatung oder wirtschaftspolitische Empfehlung." data-en="The WIX is not an official government index. Not investment advice or economic policy recommendation.">Der WIX ist kein offizieller staatlicher Index. Keine Anlageberatung oder wirtschaftspolitische Empfehlung.</p>
+</div></footer>
 
-<!-- ── JAVASCRIPT ─────────────────────────────────────────────────────────── -->
+<script src="chart.min.js"></script>
 <script>
-// ── Übersetzungen ─────────────────────────────────────────────────────────────
-let currentLang = 'de';
-function setLang(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang;
-  document.querySelectorAll('[data-de]').forEach(el => {
-    el.innerHTML = lang === 'de' ? el.dataset.de : el.dataset.en;
-  });
-  document.getElementById('btn-de').classList.toggle('active', lang === 'de');
-  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderZones();
-  renderMethodTable();
-  renderIndicators();
-}
-
-// === WIX DATA v2 — AUTO-AKTUALISIERT VON fetch_wix.py ===
-// Stand: 2026-08-02T18:54:58.543283Z UTC
-const WIX_CURRENT = 42.4;
-const WIX_PERIOD  = "Q1'26";
-const WIX_ZONE    = "Warnung";
-const WIX_Q = ["Q2'06", "Q3'06", "Q4'06", "Q1'07", "Q2'07", "Q3'07", "Q4'07", "Q1'08", "Q2'08", "Q3'08", "Q4'08", "Q1'09", "Q2'09", "Q3'09", "Q4'09", "Q1'10", "Q2'10", "Q3'10", "Q4'10", "Q1'11", "Q2'11", "Q3'11", "Q4'11", "Q1'12", "Q2'12", "Q3'12", "Q4'12", "Q1'13", "Q2'13", "Q3'13", "Q4'13", "Q1'14", "Q2'14", "Q3'14", "Q4'14", "Q1'15", "Q2'15", "Q3'15", "Q4'15", "Q1'16", "Q2'16", "Q3'16", "Q4'16", "Q1'17", "Q2'17", "Q3'17", "Q4'17", "Q1'18", "Q2'18", "Q3'18", "Q4'18", "Q1'19", "Q2'19", "Q3'19", "Q4'19", "Q1'20", "Q2'20", "Q3'20", "Q4'20", "Q1'21", "Q2'21", "Q3'21", "Q4'21", "Q1'22", "Q2'22", "Q3'22", "Q4'22", "Q1'23", "Q2'23", "Q3'23", "Q4'23", "Q1'24", "Q2'24", "Q3'24", "Q4'24", "Q1'25", "Q2'25", "Q3'25", "Q4'25", "Q1'26"];
-const WIX_V = [73, 72, 72, 73, 72, 72, 63, 67, 56, 42, 32, 18, 18, 17, 22, 65, 73, 75, 74, 77, 76, 73, 66, 53, 55, 54, 51, 40, 56, 56, 62, 69, 62, 59, 59, 55, 63, 62, 63, 62, 65, 64, 64, 68, 72, 74, 74, 70, 69, 60, 52, 55, 48, 45, 51, 28, 21, 30, 35, 32, 62, 57, 48, 45, 35, 32, 31, 32, 42, 41, 45, 46, 49, 50, 52, 53, 55, 57, 58, 42.4];
-const WIX_RAW = {
-  "bip": 0.4,
-  "industrie": -0.5,
-  "auftraege": -3.0,
-  "exporte": -1.5,
-  "handelsb": -5.0,
-  "alq": 6.5,
-  "insolvenz": 30.0,
-  "inflation": 2.2,
-  "einzelhdl": -2.5,
-  "bau": -8.0,
-  "produktiv": 0.83,
-  "schulden": 66.5
-};
-const WIX_SCORES = {
-  "bip": 56.7,
-  "industrie": 45.0,
-  "auftraege": 20.0,
-  "exporte": 31.2,
-  "handelsb": 25.0,
-  "alq": 40.5,
-  "insolvenz": 0,
-  "inflation": 95.0,
-  "einzelhdl": 18.8,
-  "bau": 0,
-  "produktiv": 70.8,
-  "schulden": 67.5
-};
+// === WIX DATA - AUTO-AKTUALISIERT VON fetch_wix.py ===
+var WIX_CURRENT = 55;
+var WIX_PERIOD  = "Q1'26";
+var WIX_Q = ["Q2'06","Q3'06","Q4'06","Q1'07","Q2'07","Q3'07","Q4'07","Q1'08","Q2'08","Q3'08","Q4'08","Q1'09","Q2'09","Q3'09","Q4'09","Q1'10","Q2'10","Q3'10","Q4'10","Q1'11","Q2'11","Q3'11","Q4'11","Q1'12","Q2'12","Q3'12","Q4'12","Q1'13","Q2'13","Q3'13","Q4'13","Q1'14","Q2'14","Q3'14","Q4'14","Q1'15","Q2'15","Q3'15","Q4'15","Q1'16","Q2'16","Q3'16","Q4'16","Q1'17","Q2'17","Q3'17","Q4'17","Q1'18","Q2'18","Q3'18","Q4'18","Q1'19","Q2'19","Q3'19","Q4'19","Q1'20","Q2'20","Q3'20","Q4'20","Q1'21","Q2'21","Q3'21","Q4'21","Q1'22","Q2'22","Q3'22","Q4'22","Q1'23","Q2'23","Q3'23","Q4'23","Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25","Q1'26"];
+var WIX_V = [73,72,72,73,72,72,63,67,56,42,32,18,18,17,22,65,73,75,74,77,76,73,66,53,55,54,51,40,56,56,62,69,62,59,59,55,63,62,63,62,65,64,64,68,72,74,74,70,69,60,52,55,48,45,51,28,21,30,35,32,62,57,48,45,35,32,31,32,42,41,45,46,49,50,52,53,55,57,58,55];
+var WIX_RAW = {"bip":0.4,"industrie":-0.5,"auftraege":-3.0,"exporte":-1.5,"handelsb":-5.0,"alq":6.5,"insolvenz":30.0,"inflation":2.2,"einzelhdl":-2.5,"bau":-8.0,"produktiv":0.83,"schulden":66.5};
 // === END WIX DATA ===
 
-// Trend 2017-2026 (37 quarters)
-const T_Q = ["Q1'17","Q2'17","Q3'17","Q4'17","Q1'18","Q2'18","Q3'18","Q4'18","Q1'19","Q2'19","Q3'19","Q4'19","Q1'20","Q2'20","Q3'20","Q4'20","Q1'21","Q2'21","Q3'21","Q4'21","Q1'22","Q2'22","Q3'22","Q4'22","Q1'23","Q2'23","Q3'23","Q4'23","Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25","Q1'26"];
-const T_V = [68,72,74,74,70,69,60,52,55,48,45,51,28,21,30,35,32,62,57,48,45,35,32,31,32,42,41,45,46,49,50,52,53,55,57,58,55];
-const COVID_FROM = 12, COVID_TO = 27;
-
-// Indicators (last 16Q = Q2 2022 to Q1 2026)
-const IND_DATA = {
-  bip:  { de:'BIP-Wachstum', en:'GDP Growth', unit:'YoY %', weight:'9%', current:'+0,4', color:'#1E4FAC',
-    vals:[-0.4,-0.2,-0.2,-1.0,-0.3,-0.9,-0.3,-0.3,0.0,-0.2,0.0,0.3,0.4,0.4,0.4,0.4] },
-  ind:  { de:'Industrieproduktion', en:'Industrial Output', unit:'YoY %', weight:'9%', current:'−0,5', color:'#5b47c7',
-    vals:[-1.5,-3.0,-3.0,-1.5,-2.5,-3.5,-5.5,-4.5,-3.5,-2.5,-2.0,-1.5,-1.0,-1.0,-0.5,-0.5] },
-  auf:  { de:'Auftragseingänge', en:'New Orders', unit:'YoY %', weight:'7%', current:'−3,0', color:'#4a8f6f',
-    vals:[-2.0,-5.0,-8.0,-5.0,-3.0,-4.0,-7.0,-6.0,-5.0,-4.0,-3.5,-3.0,-2.5,-2.0,-3.0,-3.0] },
-  exp:  { de:'Exporte', en:'Exports', unit:'YoY %', weight:'8%', current:'−1,5', color:'#2a6099',
-    vals:[1.5,-1.0,-3.0,-0.5,0.5,-1.0,-2.0,-1.5,-1.0,-0.5,0.5,1.0,0.5,-0.5,-1.5,-1.5] },
-  hbl:  { de:'Handelsbilanz', en:'Trade Balance', unit:'YoY %', weight:'5%', current:'−5,0', color:'#1baf7a',
-    vals:[2.0,-2.0,-5.0,-3.0,-2.0,-3.0,-5.0,-4.0,-3.0,-2.0,-1.0,1.0,0.5,-2.0,-5.0,-5.0] },
-  alq:  { de:'Arbeitslosenquote', en:'Unemployment', unit:'%', weight:'14%', current:'6,5', color:'#e34948',
-    vals:[5.5,5.6,5.7,5.8,5.8,5.9,6.0,6.0,6.1,6.3,6.4,6.2,6.3,6.5,6.5,6.5] },
-  ins:  { de:'Insolvenzen', en:'Insolvencies', unit:'YoY %', weight:'8%', current:'+30', color:'#8B0000',
-    vals:[5.0,8.0,15.0,20.0,22.0,25.0,28.0,30.0,30.0,28.0,25.0,28.0,30.0,32.0,30.0,30.0] },
-  infl: { de:'Inflationsrate', en:'Inflation', unit:'YoY %', weight:'11%', current:'2,2', color:'#d4880a',
-    vals:[8.3,10.0,8.9,6.5,6.3,3.2,2.7,2.4,2.0,2.2,2.4,2.2,2.1,2.2,2.2,2.2] },
-  eh:   { de:'Einzelhandelsumsätze', en:'Retail Sales', unit:'YoY %', weight:'9%', current:'−2,5', color:'#c05882',
-    vals:[-4.5,-5.5,-8.5,-3.5,-2.5,-1.5,-1.5,0.5,2.5,1.5,1.0,2.5,2.0,1.5,1.5,-2.5] },
-  bau:  { de:'Bauproduktion', en:'Construction', unit:'YoY %', weight:'5%', current:'−8,0', color:'#6b4c2a',
-    vals:[-3.0,-5.0,-8.0,-10.0,-9.0,-8.0,-10.0,-9.0,-8.0,-7.0,-6.0,-7.0,-8.0,-9.0,-8.0,-8.0] },
-  prod: { de:'Arbeitsproduktivität', en:'Productivity', unit:'YoY %', weight:'5%', current:'+0,83', color:'#888780',
-    vals:[-0.7,-0.7,-0.9,-0.9,-0.9,-0.9,-0.5,-0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.83] },
-  sch:  { de:'Staatsschuldenquote', en:'Debt-to-GDP', unit:'% BIP', weight:'10%', current:'66,5', color:'#2a78d6',
-    vals:[66.3,66.3,63.6,63.6,63.6,63.6,62.1,62.1,62.1,62.1,63.5,63.5,63.5,63.5,66.5,66.5] },
-};
-
-const ZONES = [
-  { min:70, max:100, color:'#1baf7a',
-    de:{ range:'70–100', label:'Gesund', title:'Komfortzone', desc:'Wirtschaftswachstum generiert steigende Steuereinnahmen. Sozialversicherungen laufen im Überschuss. Spielraum für Investitionen vorhanden.', example:'2017–2018: WIX ~74, Haushaltsüberschüsse, Rentenbeitrag gesenkt.' },
-    en:{ range:'70–100', label:'Healthy', title:'Comfort Zone', desc:'Economic growth generates rising tax revenues. Social insurance systems run surpluses. Room for investment.', example:'2017–2018: WIX ~74, budget surpluses, pension contributions cut.' }},
-  { min:55, max:70, color:'#85b840',
-    de:{ range:'55–70', label:'Stabil', title:'Stabilitätszone', desc:'System läuft kostendeckend, aber ohne Puffer. Beitragssätze stagnieren oder steigen leicht. Geringe Wachstumsreserven.', example:'2016, 2024–2026: WIX ~60–65. Beitragserhöhungen Krankenversicherung.' },
-    en:{ range:'55–70', label:'Stable', title:'Stability Zone', desc:'System covers costs but without buffer. Contribution rates stagnate or rise slightly. Limited growth reserves.', example:'2016, 2024–2026: WIX ~60–65. Rising health insurance contributions.' }},
-  { min:42, max:55, color:'#d4880a',
-    de:{ range:'42–55', label:'Warnung', title:'Warnzone ⚠️ — Aktueller Bereich', desc:'Steuereinnahmen wachsen langsamer als Sozialausgaben. Defizitfinanzierung nötig. Schuldenbremse unter Druck. Erste harte Debatten über Rentenniveau und Bürgergeld.', example:'2012–2013, aktuell 2024–2026: Rentenbeitrag-Debatten, Krankenkassen-Defizite.' },
-    en:{ range:'42–55', label:'Warning', title:'Warning Zone ⚠️ — Current Level', desc:'Tax revenues grow slower than social expenditure. Deficit financing needed. Debt brake under pressure. First hard debates on pension levels.', example:'2012–2013, current 2024–2026: pension debates, health fund deficits.' }},
-  { min:30, max:42, color:'#e34948',
-    de:{ range:'30–42', label:'Kritisch', title:'Kritische Zone 🚨', desc:'Pflichtbeiträge nähern sich politisch untragbaren Werten (>45% vom Lohn). Staatsverschuldung steigt schnell. Reale Rentenkürzungen unvermeidbar. Sozialsystem braucht Strukturreform.', example:'2022 Energiekrise (kurzfristig), Griechenland 2011–2015 (dauerhaft).' },
-    en:{ range:'30–42', label:'Critical', title:'Critical Zone 🚨', desc:'Mandatory contributions near politically untenable levels (>45% of wages). National debt rises fast. Real pension cuts unavoidable. Social system needs structural reform.', example:'2022 energy crisis (short-term), Greece 2011–2015 (sustained).' }},
-  { min:0, max:30, color:'#8B0000',
-    de:{ range:'0–30', label:'Systemkrise', title:'Systemkrise 💥', desc:'Sozialleistungen in heutiger Form nicht mehr finanzierbar. Harte Einschnitte bei Rente, Pflege und Gesundheit unvermeidbar. Internationaler Hilfsbedarf möglich.', example:'COVID Q2 2020 (kurzfristig abgefedert), Finanzkrise Q1–Q3 2009.' },
-    en:{ range:'0–30', label:'System Crisis', title:'System Crisis 💥', desc:'Social benefits no longer affordable in current form. Drastic cuts to pensions, care, and healthcare unavoidable. International assistance may be needed.', example:'COVID Q2 2020 (short-term cushioned), Financial crisis Q1–Q3 2009.' }},
+var INDS = [
+  {k:"bip",      de:"BIP-Wachstum",        en:"GDP Growth",       unit:"YoY %",wgt:"9%", c:"#1E4FAC",v:[-0.4,-0.2,-0.2,-1.0,-0.3,-0.9,-0.3,-0.3,0.0,-0.2,0.0,0.3,0.4,0.4,0.4,0.4]},
+  {k:"industrie",de:"Industrieproduktion", en:"Industrial Output", unit:"YoY %",wgt:"9%", c:"#5b47c7",v:[-1.5,-3.0,-3.0,-1.5,-2.5,-3.5,-5.5,-4.5,-3.5,-2.5,-2.0,-1.5,-1.0,-1.0,-0.5,-0.5]},
+  {k:"auftraege",de:"Auftragseingaenge",   en:"New Orders",        unit:"YoY %",wgt:"7%", c:"#4a8f6f",v:[-2.0,-5.0,-8.0,-5.0,-3.0,-4.0,-7.0,-6.0,-5.0,-4.0,-3.5,-3.0,-2.5,-2.0,-3.0,-3.0]},
+  {k:"exporte",  de:"Exporte",             en:"Exports",           unit:"YoY %",wgt:"8%", c:"#2a6099",v:[1.5,-1.0,-3.0,-0.5,0.5,-1.0,-2.0,-1.5,-1.0,-0.5,0.5,1.0,0.5,-0.5,-1.5,-1.5]},
+  {k:"handelsb", de:"Handelsbilanz",        en:"Trade Balance",     unit:"YoY %",wgt:"5%", c:"#1baf7a",v:[2.0,-2.0,-5.0,-3.0,-2.0,-3.0,-5.0,-4.0,-3.0,-2.0,-1.0,1.0,0.5,-2.0,-5.0,-5.0]},
+  {k:"alq",      de:"Arbeitslosenquote",   en:"Unemployment",      unit:"%",    wgt:"14%",c:"#e34948",v:[5.5,5.6,5.7,5.8,5.8,5.9,6.0,6.0,6.1,6.3,6.4,6.2,6.3,6.5,6.5,6.5]},
+  {k:"insolvenz",de:"Insolvenzen",         en:"Insolvencies",      unit:"YoY %",wgt:"8%", c:"#8B0000",v:[5.0,8.0,15.0,20.0,22.0,25.0,28.0,30.0,30.0,28.0,25.0,28.0,30.0,32.0,30.0,30.0]},
+  {k:"inflation",de:"Inflationsrate",      en:"Inflation",         unit:"YoY %",wgt:"11%",c:"#d4880a",v:[8.3,10.0,8.9,6.5,6.3,3.2,2.7,2.4,2.0,2.2,2.4,2.2,2.1,2.2,2.2,2.2]},
+  {k:"einzelhdl",de:"Einzelhandel",        en:"Retail Sales",      unit:"YoY %",wgt:"9%", c:"#c05882",v:[-4.5,-5.5,-8.5,-3.5,-2.5,-1.5,-1.5,0.5,2.5,1.5,1.0,2.5,2.0,1.5,1.5,-2.5]},
+  {k:"bau",      de:"Bauproduktion",       en:"Construction",      unit:"YoY %",wgt:"5%", c:"#6b4c2a",v:[-3.0,-5.0,-8.0,-10.0,-9.0,-8.0,-10.0,-9.0,-8.0,-7.0,-6.0,-7.0,-8.0,-9.0,-8.0,-8.0]},
+  {k:"produktiv",de:"Produktivitaet",      en:"Productivity",      unit:"YoY %",wgt:"5%", c:"#888780",v:[-0.7,-0.7,-0.9,-0.9,-0.9,-0.9,-0.5,-0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.83]},
+  {k:"schulden", de:"Staatsschulden",      en:"Debt-to-GDP",       unit:"% BIP",wgt:"10%",c:"#2a78d6",v:[66.3,66.3,63.6,63.6,63.6,63.6,62.1,62.1,62.1,62.1,63.5,63.5,63.5,63.5,66.5,66.5]},
+];
+var ZD = [
+  {c:"#1baf7a",de:{r:"70-100",l:"Gesund",t:"Komfortzone",d:"Steuereinnahmen wachsen, Sozialversicherungen im Ueberschuss, Spielraum fuer Investitionen."},en:{r:"70-100",l:"Healthy",t:"Comfort Zone",d:"Tax revenues grow, social insurance in surplus, room for investment."}},
+  {c:"#85b840",de:{r:"55-70", l:"Stabil", t:"Stabilitaetszone",d:"System kostendeckend ohne Puffer. Beitragssaetze stagnieren oder steigen leicht."},en:{r:"55-70", l:"Stable",  t:"Stability Zone",d:"System covers costs without buffer. Contribution rates stagnate or rise slightly."}},
+  {c:"#d4880a",de:{r:"42-55", l:"Warnung",t:"Warnzone (aktuell)",d:"Steuereinnahmen wachsen langsamer als Sozialausgaben. Defizitfinanzierung noetig. Schuldenbremse unter Druck."},en:{r:"42-55", l:"Warning",t:"Warning Zone (current)",d:"Tax revenues grow slower than social spending. Deficit financing needed. Debt brake under pressure."}},
+  {c:"#e34948",de:{r:"30-42", l:"Kritisch",t:"Kritische Zone",d:"Pflichtbeitraege naehern sich untragbaren Werten. Staatsverschuldung steigt schnell. Reale Rentenkürzungen unvermeidbar."},en:{r:"30-42", l:"Critical",t:"Critical Zone",d:"Contributions near untenable levels. National debt rises fast. Real pension cuts unavoidable."}},
+  {c:"#8B0000",de:{r:"0-30",  l:"Krise",  t:"Systemkrise",d:"Sozialleistungen nicht mehr finanzierbar. Harte Einschnitte unvermeidbar. Internationale Hilfe moeglich."},en:{r:"0-30",  l:"Crisis",  t:"System Crisis",d:"Social benefits no longer affordable. Drastic cuts unavoidable. International assistance possible."}},
+];
+var MD = [
+  {de:["BIP-Wachstum","9%","Quartal"],en:["GDP Growth","9%","Quarterly"]},
+  {de:["Industrieproduktion","9%","Monatl."],en:["Industrial Output","9%","Monthly"]},
+  {de:["Auftragseingaenge","7%","Monatl."],en:["New Orders","7%","Monthly"]},
+  {de:["Exporte","8%","Monatl."],en:["Exports","8%","Monthly"]},
+  {de:["Handelsbilanz","5%","Monatl."],en:["Trade Balance","5%","Monthly"]},
+  {de:["Arbeitslosenquote","14%","Monatl."],en:["Unemployment","14%","Monthly"]},
+  {de:["Insolvenzen","8%","Monatl."],en:["Insolvencies","8%","Monthly"]},
+  {de:["Inflationsrate","11%","Monatl."],en:["Inflation","11%","Monthly"]},
+  {de:["Einzelhandel","9%","Monatl."],en:["Retail Sales","9%","Monthly"]},
+  {de:["Bauproduktion","5%","Monatl."],en:["Construction","5%","Monthly"]},
+  {de:["Produktivitaet","5%","Quartal"],en:["Productivity","5%","Quarterly"]},
+  {de:["Staatsschulden","10%","Quartal"],en:["Debt-to-GDP","10%","Quarterly"]},
 ];
 
-const METHOD_ROWS = [
-  { de:['BIP-Wachstum','9%','Gesamtleistung — quartalsweise, Bestätigung'], en:['GDP Growth','9%','Total output — quarterly, confirming'] },
-  { de:['Industrieproduktion','9%','Output verarbeitende Industrie — monatlich'], en:['Industrial Output','9%','Manufacturing output — monthly'] },
-  { de:['Auftragseingänge Industrie','7%','Frühindikator, zeigt 3–6 Monate voraus — monatlich'], en:['New Orders','7%','Leading indicator, 3–6 months ahead — monthly'] },
-  { de:['Exporte','8%','Wichtigster Wachstumsmotor Deutschlands — monatlich'], en:['Exports','8%','Germany's main growth engine — monthly'] },
-  { de:['Handelsbilanz','5%','Wettbewerbsfähigkeit im Außenhandel — monatlich'], en:['Trade Balance','5%','External trade competitiveness — monthly'] },
-  { de:['Arbeitslosenquote','14%','Wohlfahrts- und Kaufkraftindikator — monatlich'], en:['Unemployment Rate','14%','Welfare and purchasing power — monthly'] },
-  { de:['Unternehmensinsolvenzen','8%','Warnsignal — invertiert, höher = schlechter — monatlich'], en:['Insolvencies','8%','Warning signal — inverted, higher = worse — monthly'] },
-  { de:['Inflationsrate (VPI)','11%','Kaufkraft und EZB-Ziel (2,0%) — monatlich'], en:['Inflation Rate','11%','Purchasing power and ECB target — monthly'] },
-  { de:['Einzelhandelsumsätze','9%','Konsumnachfrage der Haushalte — monatlich'], en:['Retail Sales','9%','Household consumer demand — monthly'] },
-  { de:['Bauproduktion','5%','Investitionsbereitschaft, Wohnungsbau — monatlich'], en:['Construction','5%','Investment activity, housing — monthly'] },
-  { de:['Arbeitsproduktivität','5%','Langfristige Wettbewerbsfähigkeit — quartalsweise'], en:['Labour Productivity','5%','Long-term competitiveness — quarterly'] },
-  { de:['Staatsschuldenquote','10%','Fiskalischer Spielraum und Schuldenquote — quartalsweise'], en:['Debt-to-GDP','10%','Fiscal space and debt level — quarterly'] },
-];
-
-// ── Gauge ─────────────────────────────────────────────────────────────────────
-function pt(cx, cy, r, deg) {
-  const rad = deg * Math.PI / 180;
-  return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
-}
-function arcPath(cx, cy, ro, ri, vMin, vMax) {
-  const a1 = (100-vMin)*1.8, a2 = (100-vMax)*1.8;
-  const p1=pt(cx,cy,ro,a1), p2=pt(cx,cy,ro,a2);
-  const p3=pt(cx,cy,ri,a2), p4=pt(cx,cy,ri,a1);
-  const f=(n)=>n.toFixed(2);
-  return `M${f(p1.x)} ${f(p1.y)} A${ro} ${ro} 0 0 1 ${f(p2.x)} ${f(p2.y)} L${f(p3.x)} ${f(p3.y)} A${ri} ${ri} 0 0 0 ${f(p4.x)} ${f(p4.y)}Z`;
-}
-function buildGauge(val) {
-  const cx=160, cy=170, ro=130, ri=82;
-  const zones=[
-    {min:0,max:30,c:'#8B0000'},{min:30,max:42,c:'#e34948'},
-    {min:42,max:55,c:'#d4880a'},{min:55,max:70,c:'#85b840'},
-    {min:70,max:100,c:'#1baf7a'}
-  ];
-  let svg = zones.map(z=>`<path d="${arcPath(cx,cy,ro,ri,z.min,z.max)}" fill="${z.c}" opacity="0.9"/>`).join('');
-  // Tick marks
-  for(let v=0;v<=100;v+=10){
-    const a=(100-v)*1.8;
-    const p1=pt(cx,cy,ro+4,a), p2=pt(cx,cy,ro+12,a);
-    svg+=`<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="white" stroke-width="${v%50===0?2:1}" opacity="0.6"/>`;
-    if(v%20===0){
-      const pl=pt(cx,cy,ro+22,a);
-      svg+=`<text x="${pl.x.toFixed(1)}" y="${pl.y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#6B6960">${v}</text>`;
-    }
-  }
-  // Needle
-  const na=(100-val)*1.8;
-  const tip=pt(cx,cy,ro-6,na), b1=pt(cx,cy,10,na+90), b2=pt(cx,cy,10,na-90);
-  svg+=`<path d="M${b1.x.toFixed(1)} ${b1.y.toFixed(1)} L${tip.x.toFixed(1)} ${tip.y.toFixed(1)} L${b2.x.toFixed(1)} ${b2.y.toFixed(1)}Z" fill="#12110F"/>`;
-  svg+=`<circle cx="${cx}" cy="${cy}" r="10" fill="#12110F"/>`;
-  svg+=`<circle cx="${cx}" cy="${cy}" r="6" fill="white"/>`;
-  // Value
-  svg+=`<text x="${cx}" y="${cy+30}" text-anchor="middle" font-family="Georgia,serif" font-size="42" font-weight="700" fill="#12110F">${val}</text>`;
-  svg+=`<text x="${cx}" y="${cy+50}" text-anchor="middle" font-size="11" fill="#9E9C96">WIX Index</text>`;
-  document.getElementById('gauge-svg').innerHTML = svg;
+var lang = 'de';
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.querySelectorAll('[data-de]').forEach(function(el){el.innerHTML = l==='de' ? el.getAttribute('data-de') : el.getAttribute('data-en');});
+  document.getElementById('btn-de').className = l==='de' ? 'on' : '';
+  document.getElementById('btn-en').className = l==='en' ? 'on' : '';
+  rZones(); rMtbl(); rInds();
 }
 
-// ── Charts ────────────────────────────────────────────────────────────────────
-const GRID = { color:'rgba(0,0,0,.05)' };
-const TICK = { color:'#9E9C96', font:{size:10} };
-
-function wixColor(v) {
-  return v>=70?'#1baf7a':v>=55?'#85b840':v>=42?'#d4880a':v>=30?'#e34948':'#8B0000';
+// Gauge
+function pt(cx,cy,r,d){var rad=d*Math.PI/180;return {x:cx+r*Math.cos(rad),y:cy-r*Math.sin(rad)};}
+function gp(cx,cy,ro,ri,mn,mx){
+  var a1=(100-mn)*1.8,a2=(100-mx)*1.8;
+  var p1=pt(cx,cy,ro,a1),p2=pt(cx,cy,ro,a2),p3=pt(cx,cy,ri,a2),p4=pt(cx,cy,ri,a1);
+  return "M"+p1.x.toFixed(1)+" "+p1.y.toFixed(1)+" A"+ro+" "+ro+" 0 0 1 "+p2.x.toFixed(1)+" "+p2.y.toFixed(1)+" L"+p3.x.toFixed(1)+" "+p3.y.toFixed(1)+" A"+ri+" "+ri+" 0 0 0 "+p4.x.toFixed(1)+" "+p4.y.toFixed(1)+"Z";
+}
+function bGauge(val){
+  var cx=150,cy=155,ro=118,ri=74;
+  var zs=[{mn:0,mx:30,c:"#8B0000"},{mn:30,mx:42,c:"#e34948"},{mn:42,mx:55,c:"#d4880a"},{mn:55,mx:70,c:"#85b840"},{mn:70,mx:100,c:"#1baf7a"}];
+  var s=zs.map(function(z){return '<path d="'+gp(cx,cy,ro,ri,z.mn,z.mx)+'" fill="'+z.c+'" opacity="0.9"/>';}).join('');
+  for(var v=0;v<=100;v+=10){var a=(100-v)*1.8,p1=pt(cx,cy,ro+3,a),p2=pt(cx,cy,ro+9,a);s+='<line x1="'+p1.x.toFixed(1)+'" y1="'+p1.y.toFixed(1)+'" x2="'+p2.x.toFixed(1)+'" y2="'+p2.y.toFixed(1)+'" stroke="white" stroke-width="'+(v%50===0?2:1)+'" opacity="0.7"/>';if(v%20===0){var pl=pt(cx,cy,ro+18,a);s+='<text x="'+pl.x.toFixed(1)+'" y="'+pl.y.toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#9E9C96">'+v+'</text>';}}
+  var na=(100-val)*1.8,tip=pt(cx,cy,ro-4,na),b1=pt(cx,cy,8,na+90),b2=pt(cx,cy,8,na-90);
+  s+='<path d="M'+b1.x.toFixed(1)+' '+b1.y.toFixed(1)+' L'+tip.x.toFixed(1)+' '+tip.y.toFixed(1)+' L'+b2.x.toFixed(1)+' '+b2.y.toFixed(1)+'Z" fill="#12110F"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="#12110F"/><circle cx="'+cx+'" cy="'+cy+'" r="4" fill="white"/>';
+  s+='<text x="'+cx+'" y="'+(cy+26)+'" text-anchor="middle" font-family="Georgia,serif" font-size="36" font-weight="700" fill="#12110F">'+val+'</text>';
+  s+='<text x="'+cx+'" y="'+(cy+43)+'" text-anchor="middle" font-size="10" fill="#9E9C96">WIX Index</text>';
+  document.getElementById('gsv').innerHTML=s;
 }
 
-function initMainChart() {
-  const ctx = document.getElementById('chartMain').getContext('2d');
-  new Chart(ctx, {
-    type:'line',
-    data:{
-      labels: WIX_Q,
-      datasets:[
-        { data:WIX_V, borderColor:'#1E4FAC', borderWidth:2,
-          backgroundColor:'rgba(30,79,172,.06)', fill:true, tension:0.3,
-          pointRadius:WIX_V.map((_,i)=>i===WIX_V.length-1?5:2),
-          pointBackgroundColor:WIX_V.map(wixColor),
-          pointBorderColor:WIX_V.map(wixColor), isAnimationActive:false }
-      ]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:c=>`WIX: ${c.parsed.y}`}},
-        annotation:undefined
-      },
-      scales:{
-        x:{ticks:{...TICK,maxRotation:45,autoSkip:true,maxTicksLimit:16,callback:(v,i)=>WIX_Q[i].startsWith("Q1")?WIX_Q[i].replace("Q1'","'"):''}, grid:GRID},
-        y:{min:0,max:100,ticks:TICK,grid:GRID,
-          afterDraw(chart){
-            const ctx=chart.ctx, ya=chart.scales.y, xa=chart.scales.x;
-            const zones=[{y1:0,y2:30,c:'rgba(139,0,0,.08)'},{y1:30,y2:42,c:'rgba(227,73,72,.08)'},{y1:42,y2:55,c:'rgba(212,136,10,.07)'},{y1:55,y2:70,c:'rgba(133,184,64,.06)'},{y1:70,y2:100,c:'rgba(27,175,122,.08)'}];
-            zones.forEach(z=>{
-              const y1=ya.getPixelForValue(z.y2), y2=ya.getPixelForValue(z.y1);
-              ctx.fillStyle=z.c; ctx.fillRect(xa.left,y1,xa.right-xa.left,y2-y1);
-            });
-          }
-        }
-      }
-    }
+// Chart helpers
+function wc(v){return v>=70?"#1baf7a":v>=55?"#85b840":v>=42?"#d4880a":v>=30?"#e34948":"#8B0000";}
+var G2={color:"rgba(0,0,0,.05)"}, T2={color:"#9E9C96",font:{size:10}};
+var zPlugin={id:"zp",beforeDraw:function(ch){var ctx=ch.ctx,ya=ch.scales.y,xa=ch.scales.x;[{y1:0,y2:30,c:"rgba(139,0,0,.08)"},{y1:30,y2:42,c:"rgba(227,73,72,.08)"},{y1:42,y2:55,c:"rgba(212,136,10,.07)"},{y1:55,y2:70,c:"rgba(133,184,64,.06)"},{y1:70,y2:100,c:"rgba(27,175,122,.08)"}].forEach(function(z){var y1=ya.getPixelForValue(z.y2),y2=ya.getPixelForValue(z.y1);ctx.fillStyle=z.c;ctx.fillRect(xa.left,y1,xa.right-xa.left,y2-y1);});}};
+
+var mc,tc;
+var ic={};
+
+function iMain(){
+  if(mc)mc.destroy();
+  mc=new Chart(document.getElementById('cm').getContext('2d'),{type:'line',plugins:[zPlugin],data:{labels:WIX_Q,datasets:[{data:WIX_V,borderColor:'#1E4FAC',borderWidth:2,backgroundColor:'rgba(30,79,172,.05)',fill:true,tension:0.3,pointRadius:WIX_V.map(function(_,i){return i===WIX_V.length-1?5:2;}),pointBackgroundColor:WIX_V.map(wc),pointBorderColor:WIX_V.map(wc)}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return 'WIX: '+c.parsed.y;}}}},scales:{x:{ticks:Object.assign({},T2,{maxRotation:45,autoSkip:true,maxTicksLimit:16,callback:function(v,i){return WIX_Q[i]&&WIX_Q[i].startsWith("Q1")?WIX_Q[i].replace("Q1'","'"):''}}),grid:G2},y:{min:0,max:100,ticks:T2,grid:G2}}}});
+}
+
+function iTrend(){
+  if(tc)tc.destroy();
+  var tq=["Q1'17","Q2'17","Q3'17","Q4'17","Q1'18","Q2'18","Q3'18","Q4'18","Q1'19","Q2'19","Q3'19","Q4'19","Q1'20","Q2'20","Q3'20","Q4'20","Q1'21","Q2'21","Q3'21","Q4'21","Q1'22","Q2'22","Q3'22","Q4'22","Q1'23","Q2'23","Q3'23","Q4'23","Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25","Q1'26"];
+  var tv=[68,72,74,74,70,69,60,52,55,48,45,51,28,21,30,35,32,62,57,48,45,35,32,31,32,42,41,45,46,49,50,52,53,55,57,58,55];
+  var cf=12,ct=27;
+  var incl=tv.map(function(w,i){return{i:i,w:w};}).filter(function(d){return d.i<cf||d.i>ct;});
+  var n=incl.length,mX=incl.reduce(function(s,d){return s+d.i;},0)/n,mY=incl.reduce(function(s,d){return s+d.w;},0)/n;
+  var num=incl.reduce(function(s,d){return s+(d.i-mX)*(d.w-mY);},0),den=incl.reduce(function(s,d){return s+(d.i-mX)*(d.i-mX);},0);
+  var sl=num/den,ic2=mY-sl*mX;
+  tc=new Chart(document.getElementById('ct').getContext('2d'),{type:'line',data:{labels:tq,datasets:[{data:tv.map(function(v,i){return(i>=cf&&i<=ct)?null:v;}),borderColor:'#1E4FAC',borderWidth:2.5,pointRadius:3,pointBackgroundColor:tv.map(function(v,i){return(i>=cf&&i<=ct)?'transparent':wc(v);}),fill:false,tension:0.3,spanGaps:false},{data:tv.map(function(v,i){return(i>=cf&&i<=ct)?v:null;}),borderColor:'#ccc',borderWidth:1.5,pointRadius:0,fill:false,spanGaps:false},{data:tv.map(function(_,i){return+(ic2+sl*i).toFixed(1);}),borderColor:'#e6780a',borderWidth:2.5,borderDash:[8,4],pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:Object.assign({},T2,{callback:function(v,i){return tq[i]&&tq[i].startsWith("Q1")?tq[i].replace("Q1'","'"):''}}),grid:G2},y:{min:0,max:100,ticks:T2,grid:G2}}}});
+}
+
+function rInds(){
+  var g=document.getElementById('ig');g.innerHTML='';
+  INDS.forEach(function(d){
+    var name=lang==='de'?d.de:d.en;
+    var cur=WIX_RAW[d.k];
+    var cs=(cur>=0?'+':'')+cur.toFixed(Math.abs(cur)===Math.round(Math.abs(cur))?0:1);
+    var el=document.createElement('div');el.className='ic';
+    el.innerHTML='<div class="it"><div class="in" style="color:'+d.c+'">'+name+'</div><div class="iw">'+d.wgt+'</div></div><div class="iu">'+d.unit+'</div><div class="iv" style="color:'+d.c+'">'+cs+'</div><canvas id="ic_'+d.k+'" height="58"></canvas>';
+    g.appendChild(el);
+    (function(dd){setTimeout(function(){
+      if(ic[dd.k])ic[dd.k].destroy();
+      var cv=document.getElementById('ic_'+dd.k);
+      if(!cv)return;
+      ic[dd.k]=new Chart(cv.getContext('2d'),{type:'line',data:{labels:Array(dd.v.length).fill(''),datasets:[{data:dd.v,borderColor:dd.c,borderWidth:1.5,pointRadius:0,fill:true,backgroundColor:dd.c+'18',tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+    },0);})(d);
   });
 }
 
-function initTrendChart() {
-  const incl = T_V.map((w,i)=>({i,w})).filter(d=>d.i<COVID_FROM||d.i>COVID_TO);
-  const n=incl.length, mX=incl.reduce((s,d)=>s+d.i,0)/n, mY=incl.reduce((s,d)=>s+d.w,0)/n;
-  const num=incl.reduce((s,d)=>s+(d.i-mX)*(d.w-mY),0), den=incl.reduce((s,d)=>s+(d.i-mX)**2,0);
-  const slope=num/den, icpt=mY-slope*mX;
-  const normal=T_V.map((v,i)=>(i>=COVID_FROM&&i<=COVID_TO)?null:v);
-  const covid=T_V.map((v,i)=>(i>=COVID_FROM&&i<=COVID_TO)?v:null);
-  const trend=T_V.map((_,i)=>+(icpt+slope*i).toFixed(1));
-  const ctx=document.getElementById('chartTrend').getContext('2d');
-  new Chart(ctx,{type:'line',data:{labels:T_Q,datasets:[
-    {data:normal,borderColor:'#1E4FAC',borderWidth:2.5,pointRadius:3,pointBackgroundColor:normal.map(v=>v?wixColor(v):'transparent'),fill:false,tension:0.3,spanGaps:false},
-    {data:covid,borderColor:'#ccc',borderWidth:1.5,pointRadius:1.5,fill:false,tension:0.3,spanGaps:false},
-    {data:trend,borderColor:'#e6780a',borderWidth:2.5,borderDash:[8,4],pointRadius:0,fill:false,tension:0}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.dataset.borderColor==='#e6780a'?'Trend':'WIX'}: ${c.parsed.y?.toFixed(1)??'-'}`}}},scales:{x:{ticks:{...TICK,callback:(v,i)=>T_Q[i].startsWith("Q1")?T_Q[i].replace("Q1'","'"):''},grid:GRID},y:{min:0,max:100,ticks:TICK,grid:GRID}}}});
+function rZones(){
+  var c=document.getElementById('zs');c.innerHTML='';
+  ZD.forEach(function(z){var t=z[lang];var el=document.createElement('div');el.className='zc';el.innerHTML='<div class="zb2" style="background:'+z.c+'"><div class="zr">'+t.r+'</div><div class="zl">'+t.l+'</div></div><div class="zbd"><div class="zt" style="color:'+z.c+'">'+t.t+'</div><div class="zd">'+t.d+'</div></div>';c.appendChild(el);});
 }
 
-// ── Indicators ────────────────────────────────────────────────────────────────
-let indicatorCharts = {};
-function renderIndicators() {
-  const grid = document.getElementById('indicators-grid');
-  grid.innerHTML = '';
-  Object.entries(IND_DATA).forEach(([key, d]) => {
-    const name = currentLang==='de' ? d.de : d.en;
-    const card = document.createElement('div');
-    card.className = 'indicator-card';
-    card.innerHTML = `
-      <div class="indicator-card__header">
-        <div class="indicator-card__name">${name}</div>
-        <div class="indicator-card__weight">${d.weight}</div>
-      </div>
-      <div class="indicator-card__sub">${d.unit}</div>
-      <div class="indicator-card__value" style="color:${d.color}">${d.current}</div>
-      <canvas id="ind-${key}" height="70"></canvas>`;
-    grid.appendChild(card);
-    setTimeout(()=>{
-      if(indicatorCharts[key]) indicatorCharts[key].destroy();
-      const ctx = document.getElementById(`ind-${key}`).getContext('2d');
-      indicatorCharts[key] = new Chart(ctx,{type:'line',data:{labels:Array(16).fill(''),datasets:[{data:d.vals,borderColor:d.color,borderWidth:1.5,pointRadius:0,fill:true,backgroundColor:d.color+'15',tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
-    },0);
-  });
+function rMtbl(){
+  var b=document.getElementById('mb');b.innerHTML='';
+  MD.forEach(function(r){var d=r[lang];var tr=document.createElement('tr');tr.innerHTML='<td style="font-weight:600">'+d[0]+'</td><td style="font-family:monospace;color:#1E4FAC;font-weight:600">'+d[1]+'</td><td style="color:#6B6960">'+d[2]+'</td>';b.appendChild(tr);});
 }
 
-// ── Zones ─────────────────────────────────────────────────────────────────────
-function renderZones() {
-  const grid = document.getElementById('zones-grid');
-  grid.innerHTML = '';
-  ZONES.forEach(z => {
-    const t = z[currentLang];
-    const card = document.createElement('div');
-    card.className = 'zone-card';
-    card.innerHTML = `
-      <div class="zone-card__badge" style="background:${z.color}">
-        <div class="zone-card__range">${t.range}</div>
-        <div class="zone-card__label">${t.label}</div>
-      </div>
-      <div class="zone-card__body">
-        <div class="zone-card__title" style="color:${z.color}">${t.title}</div>
-        <div class="zone-card__desc">${t.desc}</div>
-        <div class="zone-card__example">${t.example}</div>
-      </div>`;
-    grid.appendChild(card);
-  });
-}
-
-// ── Methodology Table ─────────────────────────────────────────────────────────
-function renderMethodTable() {
-  const tbody = document.getElementById('method-tbody');
-  tbody.innerHTML = '';
-  METHOD_ROWS.forEach(r => {
-    const d = r[currentLang];
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td style="font-weight:600">${d[0]}</td><td style="font-family:'Courier New',monospace;font-weight:700;color:var(--accent)">${d[1]}</td><td style="color:var(--text2)">${d[2]}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  buildGauge(typeof WIX_CURRENT !== "undefined" ? WIX_CURRENT : 55);
-  initMainChart();
-  initTrendChart();
-  renderZones();
-  renderMethodTable();
-  renderIndicators();
+window.addEventListener('load',function(){
+  bGauge(WIX_CURRENT);
+  if(typeof Chart!=='undefined'){iMain();iTrend();}
+  else{console.error('Chart.js fehlt!');}
+  rZones();rMtbl();rInds();
 });
 </script>
 </body>
