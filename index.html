@@ -47,7 +47,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .iw{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;background:#F4F3EE;color:#6B6960}
 .iu{font-size:11px;color:#9E9C96;margin-bottom:8px}
 .iv{font-family:'Courier New',monospace;font-size:22px;font-weight:700;margin-bottom:6px}
-.ic canvas{max-height:58px}
+.ic canvas{max-height:72px}
 .zs{display:flex;flex-direction:column;gap:8px}
 .zc{display:grid;grid-template-columns:80px 1fr;border-radius:6px;overflow:hidden;border:1px solid #E3E2DB}
 .zb2{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;text-align:center}
@@ -286,6 +286,7 @@ function setLang(l) {
   document.getElementById('btn-de').className = l==='de' ? 'on' : '';
   document.getElementById('btn-en').className = l==='en' ? 'on' : '';
   rZones(); rMtbl(); rInds();
+  if(typeof Chart!=='undefined'){iMain();iTrend();}
 }
 
 // Gauge
@@ -318,7 +319,7 @@ var ic={};
 
 function iMain(){
   if(mc)mc.destroy();
-  mc=new Chart(document.getElementById('cm').getContext('2d'),{type:'line',plugins:[zPlugin],data:{labels:WIX_Q,datasets:[{data:WIX_V,borderColor:'#1E4FAC',borderWidth:2,backgroundColor:'rgba(30,79,172,.05)',fill:true,tension:0.3,pointRadius:WIX_V.map(function(_,i){return i===WIX_V.length-1?5:2;}),pointBackgroundColor:WIX_V.map(wc),pointBorderColor:WIX_V.map(wc)}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return 'WIX: '+c.parsed.y;}}}},scales:{x:{ticks:Object.assign({},T2,{maxRotation:45,autoSkip:true,maxTicksLimit:16,callback:function(v,i){return WIX_Q[i]&&WIX_Q[i].startsWith("Q1")?WIX_Q[i].replace("Q1'","'"):''}}),grid:G2},y:{min:0,max:100,ticks:T2,grid:G2}}}});
+  mc=new Chart(document.getElementById('cm').getContext('2d'),{type:'line',plugins:[zPlugin],data:{labels:WIX_Q,datasets:[{data:WIX_V,borderColor:'#1E4FAC',borderWidth:2,backgroundColor:'rgba(30,79,172,.05)',fill:true,tension:0.3,pointRadius:WIX_V.map(function(_,i){return i===WIX_V.length-1?5:2;}),pointBackgroundColor:WIX_V.map(wc),pointBorderColor:WIX_V.map(wc)}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return 'WIX: '+c.parsed.y;}}}},scales:{x:{title:{display:true,text:lang==='de'?'Quartal':'Quarter',color:'#9E9C96',font:{size:11}},ticks:Object.assign({},T2,{maxRotation:45,autoSkip:true,maxTicksLimit:16,callback:function(v,i){return WIX_Q[i]&&WIX_Q[i].startsWith("Q1")?WIX_Q[i].replace("Q1'","'"):''}}),grid:G2},y:{min:0,max:100,title:{display:true,text:lang==='de'?'WIX-Wert (0-100)':'WIX Value (0-100)',color:'#9E9C96',font:{size:11}},ticks:T2,grid:G2}}}});
 }
 
 function iTrend(){
@@ -330,7 +331,7 @@ function iTrend(){
   var n=incl.length,mX=incl.reduce(function(s,d){return s+d.i;},0)/n,mY=incl.reduce(function(s,d){return s+d.w;},0)/n;
   var num=incl.reduce(function(s,d){return s+(d.i-mX)*(d.w-mY);},0),den=incl.reduce(function(s,d){return s+(d.i-mX)*(d.i-mX);},0);
   var sl=num/den,ic2=mY-sl*mX;
-  tc=new Chart(document.getElementById('ct').getContext('2d'),{type:'line',data:{labels:tq,datasets:[{data:tv.map(function(v,i){return(i>=cf&&i<=ct)?null:v;}),borderColor:'#1E4FAC',borderWidth:2.5,pointRadius:3,pointBackgroundColor:tv.map(function(v,i){return(i>=cf&&i<=ct)?'transparent':wc(v);}),fill:false,tension:0.3,spanGaps:false},{data:tv.map(function(v,i){return(i>=cf&&i<=ct)?v:null;}),borderColor:'#ccc',borderWidth:1.5,pointRadius:0,fill:false,spanGaps:false},{data:tv.map(function(_,i){return+(ic2+sl*i).toFixed(1);}),borderColor:'#e6780a',borderWidth:2.5,borderDash:[8,4],pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:Object.assign({},T2,{callback:function(v,i){return tq[i]&&tq[i].startsWith("Q1")?tq[i].replace("Q1'","'"):''}}),grid:G2},y:{min:0,max:100,ticks:T2,grid:G2}}}});
+  tc=new Chart(document.getElementById('ct').getContext('2d'),{type:'line',data:{labels:tq,datasets:[{data:tv.map(function(v,i){return(i>=cf&&i<=ct)?null:v;}),borderColor:'#1E4FAC',borderWidth:2.5,pointRadius:3,pointBackgroundColor:tv.map(function(v,i){return(i>=cf&&i<=ct)?'transparent':wc(v);}),fill:false,tension:0.3,spanGaps:false},{data:tv.map(function(v,i){return(i>=cf&&i<=ct)?v:null;}),borderColor:'#ccc',borderWidth:1.5,pointRadius:0,fill:false,spanGaps:false},{data:tv.map(function(_,i){return+(ic2+sl*i).toFixed(1);}),borderColor:'#e6780a',borderWidth:2.5,borderDash:[8,4],pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:lang==='de'?'Quartal':'Quarter',color:'#9E9C96',font:{size:11}},ticks:Object.assign({},T2,{callback:function(v,i){return tq[i]&&tq[i].startsWith("Q1")?tq[i].replace("Q1'","'"):''}}),grid:G2},y:{min:0,max:100,title:{display:true,text:lang==='de'?'WIX-Wert (0-100)':'WIX Value (0-100)',color:'#9E9C96',font:{size:11}},ticks:T2,grid:G2}}}});
 }
 
 function rInds(){
@@ -340,13 +341,15 @@ function rInds(){
     var cur=WIX_RAW[d.k];
     var cs=(cur>=0?'+':'')+cur.toFixed(Math.abs(cur)===Math.round(Math.abs(cur))?0:1);
     var el=document.createElement('div');el.className='ic';
-    el.innerHTML='<div class="it"><div class="in" style="color:'+d.c+'">'+name+'</div><div class="iw">'+d.wgt+'</div></div><div class="iu">'+d.unit+'</div><div class="iv" style="color:'+d.c+'">'+cs+'</div><canvas id="ic_'+d.k+'" height="58"></canvas>';
+    el.innerHTML='<div class="it"><div class="in" style="color:'+d.c+'">'+name+'</div><div class="iw">'+d.wgt+'</div></div><div class="iu">'+d.unit+'</div><div class="iv" style="color:'+d.c+'">'+cs+'</div><canvas id="ic_'+d.k+'" height="72"></canvas>';
     g.appendChild(el);
     (function(dd){setTimeout(function(){
       if(ic[dd.k])ic[dd.k].destroy();
       var cv=document.getElementById('ic_'+dd.k);
       if(!cv)return;
-      ic[dd.k]=new Chart(cv.getContext('2d'),{type:'line',data:{labels:Array(dd.v.length).fill(''),datasets:[{data:dd.v,borderColor:dd.c,borderWidth:1.5,pointRadius:0,fill:true,backgroundColor:dd.c+'18',tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+      var vmin=Math.min.apply(null,dd.v),vmax=Math.max.apply(null,dd.v);
+      var pad=(vmax-vmin)*0.15||1;
+      ic[dd.k]=new Chart(cv.getContext('2d'),{type:'line',data:{labels:dd.v.map(function(_,i){return i===0?'-16':(i===dd.v.length-1?(lang==='de'?'jetzt':'now'):'');}),datasets:[{data:dd.v,borderColor:dd.c,borderWidth:1.5,pointRadius:0,fill:true,backgroundColor:dd.c+'18',tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:true,callbacks:{title:function(){return'';},label:function(c){return c.parsed.y+(dd.unit.indexOf('%')>=0?'%':'');}}}},scales:{x:{display:true,ticks:{color:'#c4c2bc',font:{size:8},maxRotation:0,autoSkip:false},grid:{display:false}},y:{display:true,min:vmin-pad,max:vmax+pad,ticks:{color:'#c4c2bc',font:{size:8},maxTicksLimit:3,callback:function(v){return v.toFixed(0);}},grid:{color:'rgba(0,0,0,.04)'}}}}});
     },0);})(d);
   });
 }
