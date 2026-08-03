@@ -17,7 +17,7 @@ DATA_FILE  = "wix-data.json"
 # ── Eurostat API ──────────────────────────────────────────────────────────────
 
 def eurostat_get(dataset: str, params: dict, n: int = 16) -> dict:
-    p = {**params, "format": "JSON", "lang": "EN", "lastTimePeriods": n}
+    p = {**params, "format": "JSON", "lang": "EN", "lastTimePeriod": n}
     try:
         r = requests.get(f"{EUROSTAT}/{dataset}", params=p, timeout=30)
         r.raise_for_status()
@@ -27,8 +27,8 @@ def eurostat_get(dataset: str, params: dict, n: int = 16) -> dict:
         return {}
     try:
         dims     = d["id"]
-        t_idx    = dims.index("TIME_PERIOD")
-        t_cats   = d["dimension"]["TIME_PERIOD"]["category"]
+        t_idx    = dims.index("time")
+        t_cats   = d["dimension"]["time"]["category"]
         periods  = [k for k, _ in sorted(t_cats["index"].items(), key=lambda x: x[1])]
         size     = d["size"]
         stride   = 1
@@ -132,46 +132,46 @@ def fetch_all() -> dict:
     print(f"     {period}: {r['bip']}%")
 
     # 2. Industrieproduktion YoY (monthly)
+    # s_adj=SCA hat keine Daten für PCH_SM (YoY) — Eurostat publiziert das nur
+    # kalenderbereinigt (CA), nicht saison+kalenderbereinigt, für diese Reihe.
     print("  2. Industrieproduktion...")
-    s = eurostat_get("sts_inpr_m", {"geo":"DE","s_adj":"SCA","nace_r2":"B-D","indic":"PROD","unit":"PCH_SM"})
+    s = eurostat_get("sts_inpr_m", {"geo":"DE","s_adj":"CA","nace_r2":"B-D","indic_bt":"PRD","unit":"PCH_SM"})
     _, r["industrie"] = latest(s)
     print(f"     {r['industrie']}%")
 
-    # 3. Auftragseingänge Industrie YoY (monthly)
-    print("  3. Auftragseingänge Industrie...")
-    s = eurostat_get("sts_inot_m", {"geo":"DE","s_adj":"SCA","nace_r2":"B-E36","indic":"NEW","unit":"PCH_SM"})
-    _, r["auftraege"] = latest(s)
-    print(f"     {r['auftraege']}%")
+    # 3. Auftragseingänge Industrie YoY
+    # Eurostat disseminiert "New Orders in Industry" NICHT (weder sts_inot_m noch
+    # sts_inon_m existieren — geprüft gegen den vollständigen Eurostat-Datenkatalog).
+    # Destatis führt die Reihe national, aber sie ist nicht EU-harmonisiert/über die
+    # Eurostat-API verfügbar. Bleibt daher auf dem FALLBACK-Wert.
+    print("  3. Auftragseingänge Industrie... (kein Eurostat-Dataset verfügbar, Fallback)")
 
-    # 4+5. Exporte und Handelsbilanz (monthly, Mio EUR)
+    # 4+5. Exporte und Handelsbilanz (monthly)
+    # war: ext_st_27msbec (404, existiert nicht mehr) -> ext_st_27_2020msbec
     print("  4+5. Exporte & Handelsbilanz...")
-    exp = eurostat_get("ext_st_27msbec", {"geo":"DE","tra_flow":"EXP","sitc06":"TOTAL","unit":"MIO_EUR"})
-    imp = eurostat_get("ext_st_27msbec", {"geo":"DE","tra_flow":"IMP","sitc06":"TOTAL","unit":"MIO_EUR"})
-    if exp and imp:
-        shared = sorted(set(exp) & set(imp))
-        if len(shared) >= 13:
-            cur  = shared[-1]
-            prev = shared[-13]  # Vorjahr
-            r["exporte"]  = round((exp[cur] / exp[prev] - 1) * 100, 2) if exp.get(prev) else None
-            bal_cur  = exp[cur]  - imp[cur]
-            bal_prev = exp[prev] - imp[prev]
-            r["handelsb"] = round((bal_cur / abs(bal_prev) - 1) * 100, 2) if bal_prev != 0 else None
-            print(f"     Exporte YoY: {r['exporte']}%  |  Handelsbilanz YoY: {r['handelsb']}%")
-    
+    exp = eurostat_get("ext_st_27_2020msbec", {"geo":"DE","stk_flow":"EXP","indic_et":"TRD_VAL_RT12","partner":"WORLD","bclas_bec":"TOTAL"})
+    _, r["exporte"] = latest(exp)
+
+    bal = eurostat_get("ext_st_27_2020msbec", {"geo":"DE","stk_flow":"BAL_RT","indic_et":"TRD_VAL","partner":"WORLD","bclas_bec":"TOTAL"})
+    if bal and len(bal) >= 13:
+        ks = sorted(bal.keys())
+        cur, prev = ks[-1], ks[-13]  # Vorjahr
+        r["handelsb"] = round((bal[cur] / abs(bal[prev]) - 1) * 100, 2) if bal.get(prev) else None
+    print(f"     Exporte YoY: {r.get('exporte')}%  |  Handelsbilanz YoY: {r.get('handelsb')}%")
+
     # 6. Arbeitslosenquote (monthly, ILO)
     print("  6. Arbeitslosenquote...")
     s = eurostat_get("une_rt_m", {"geo":"DE","s_adj":"SA","age":"TOTAL","sex":"T","unit":"PC_ACT"})
     _, r["alq"] = latest(s)
     print(f"     {r['alq']}%")
 
-    # 7. Unternehmensinsolvenzen YoY (quarterly)
+    # 7. Unternehmensinsolvenzen YoY (monthly)
+    # war: bsbs_ins_q (404, existiert nicht) -> sts_rb_m liefert die
+    # Bankruptcy-Rate direkt als YoY% (unit=PCH_SM), keine manuelle Berechnung nötig.
     print("  7. Unternehmensinsolvenzen...")
-    s = eurostat_get("bsbs_ins_q", {"geo":"DE","indic":"INS_OPEN","unit":"NR"})
-    if s and len(s) >= 5:
-        qs = sorted(s.keys())
-        cur_q, prev_q = qs[-1], qs[-5]  # Vorjahr
-        r["insolvenz"] = round((s[cur_q] / s[prev_q] - 1) * 100, 2) if s.get(prev_q) else None
-        print(f"     YoY: {r['insolvenz']}%")
+    s = eurostat_get("sts_rb_m", {"geo":"DE","indic_bt":"BKRT","nace_r2":"B-S_X_O_S94","s_adj":"NSA","unit":"PCH_SM"})
+    _, r["insolvenz"] = latest(s)
+    print(f"     YoY: {r['insolvenz']}%")
 
     # 8. Inflationsrate VPI (monthly → Quartalsdurchschnitt)
     print("  8. Inflationsrate...")
@@ -180,26 +180,31 @@ def fetch_all() -> dict:
     print(f"     {r['inflation']}%")
 
     # 9. Einzelhandelsumsätze YoY (monthly)
+    # indic -> indic_bt=VOL_SLS (Volume of sales; TOVT ist kein gültiger Wert),
+    # s_adj=SCA hat wie bei Industrie/Bau keine Daten für PCH_SM -> CA
     print("  9. Einzelhandelsumsätze...")
-    s = eurostat_get("sts_trtu_m", {"geo":"DE","s_adj":"SCA","nace_r2":"G47","indic":"TOVT","unit":"PCH_SM"})
+    s = eurostat_get("sts_trtu_m", {"geo":"DE","s_adj":"CA","nace_r2":"G47","indic_bt":"VOL_SLS","unit":"PCH_SM"})
     _, r["einzelhdl"] = latest(s)
     print(f"     {r['einzelhdl']}%")
 
     # 10. Bauproduktion YoY (monthly)
     print("  10. Bauproduktion...")
-    s = eurostat_get("sts_copr_m", {"geo":"DE","s_adj":"SCA","indic":"PROD","nace_r2":"F","unit":"PCH_SM"})
+    s = eurostat_get("sts_copr_m", {"geo":"DE","s_adj":"CA","indic_bt":"PRD","nace_r2":"F","unit":"PCH_SM"})
     _, r["bau"] = latest(s)
     print(f"     {r['bau']}%")
 
     # 11. Arbeitsproduktivität YoY (quarterly)
+    # na_item=LP_I_NACE2 existiert nicht -> RLPR_PER (Real labour productivity per person)
     print("  11. Arbeitsproduktivität...")
-    s = eurostat_get("namq_10_lp_ulc", {"geo":"DE","s_adj":"SCA","na_item":"LP_I_NACE2","unit":"PCH_SM"})
+    s = eurostat_get("namq_10_lp_ulc", {"geo":"DE","s_adj":"SCA","na_item":"RLPR_PER","unit":"PCH_SM"})
     _, r["produktiv"] = latest(s)
     print(f"     {r['produktiv']}%")
 
     # 12. Staatsschuldenquote (quarterly)
+    # na_item fehlte -> Query mittelte über alle 20 Schulden-Kategorien statt
+    # nur "GD" (General government consolidated gross debt) zu liefern
     print("  12. Staatsschuldenquote...")
-    s = eurostat_get("gov_10q_ggdebt", {"geo":"DE","unit":"PC_GDP","sector":"S13"})
+    s = eurostat_get("gov_10q_ggdebt", {"geo":"DE","unit":"PC_GDP","sector":"S13","na_item":"GD"})
     _, r["schulden"] = latest(s)
     print(f"     {r['schulden']}% BIP")
 
