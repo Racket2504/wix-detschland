@@ -187,7 +187,7 @@ Industrie: clamp(50 + YoY/5 x 50, 0, 100)
 Auftraege: clamp(50 + YoY/5 x 50, 0, 100)
 Exporte:   clamp(50 + YoY/4 x 50, 0, 100)
 Handelsb.: clamp(50 + YoY/10 x 50, 0, 100)
-ALQ:       clamp(100 - (r-3) x 17, 0, 100)
+ALQ:       clamp(100 - (r-5) x 17, 0, 100)  [BA-Naeherung]
 Insolvenz: clamp(50 - YoY/30 x 50, 0, 100)
 Inflation: clamp(100 - |r-2| x 25, 0, 100)
 Einzelhdl: clamp(50 + YoY/4 x 50, 0, 100)
@@ -199,9 +199,9 @@ WIX = Summe (Score_i x Gewicht_i)</div>
       <br>
       <h3 style="font-family:Georgia,serif;font-size:16px;margin-bottom:10px" data-de="Datenquellen" data-en="Data Sources">Datenquellen</h3>
       <ul class="sl">
-        <li>Destatis - BIP, Industrie, Auftraege, Einzelhandel, Inflation, Bau</li>
-        <li>Bundesagentur fuer Arbeit - Arbeitslosenquote, Insolvenzen</li>
-        <li>Eurostat - Exporte, Handelsbilanz, Produktivitaet, Schuldenquote</li>
+        <li><span data-de="Destatis - BIP, Industrie, Auftraege, Einzelhandel, Inflation, Bau" data-en="Destatis - GDP, Industry, New Orders, Retail Sales, Inflation, Construction">Destatis - BIP, Industrie, Auftraege, Einzelhandel, Inflation, Bau</span></li>
+        <li><span data-de="Arbeitslosenquote: Eurostat (ILO-Quote) + Naeherungs-Aufschlag (~2,5 Punkte) auf BA-Niveau — keine offene, automatisierbare BA/Destatis-Quelle ohne Registrierung gefunden" data-en="Unemployment rate: Eurostat (ILO rate) + approximation offset (~2.5 points) to German BA (national) level — no open, automatable BA/Destatis source found without registration">Arbeitslosenquote: Eurostat (ILO-Quote) + Naeherungs-Aufschlag (~2,5 Punkte) auf BA-Niveau — keine offene, automatisierbare BA/Destatis-Quelle ohne Registrierung gefunden</span></li>
+        <li><span data-de="Eurostat - Exporte, Handelsbilanz, Insolvenzen, Produktivitaet, Schuldenquote" data-en="Eurostat - Exports, Trade Balance, Insolvencies, Productivity, Debt-to-GDP">Eurostat - Exporte, Handelsbilanz, Insolvenzen, Produktivitaet, Schuldenquote</span></li>
       </ul>
     </div>
   </div>
@@ -240,19 +240,19 @@ WIX = Summe (Score_i x Gewicht_i)</div>
 </script>
 <script>
 // === WIX DATA v2 — AUTO-AKTUALISIERT VON fetch_wix.py ===
-// Stand: 2026-08-04T12:37:41.369960Z UTC
-const WIX_CURRENT = 60.0;
+// Stand: 2026-08-06T11:11:41.623723Z UTC
+const WIX_CURRENT = 58.8;
 const WIX_PERIOD  = "Q2'26";
 const WIX_ZONE    = "Stabil";
 const WIX_Q = ["Q1'06", "Q2'06", "Q3'06", "Q4'06", "Q1'07", "Q2'07", "Q3'07", "Q4'07", "Q1'08", "Q2'08", "Q3'08", "Q4'08", "Q1'09", "Q2'09", "Q3'09", "Q4'09", "Q1'10", "Q2'10", "Q3'10", "Q4'10", "Q1'11", "Q2'11", "Q3'11", "Q4'11", "Q1'12", "Q2'12", "Q3'12", "Q4'12", "Q1'13", "Q2'13", "Q3'13", "Q4'13", "Q1'14", "Q2'14", "Q3'14", "Q4'14", "Q1'15", "Q2'15", "Q3'15", "Q4'15", "Q1'16", "Q2'16", "Q3'16", "Q4'16", "Q1'17", "Q2'17", "Q3'17", "Q4'17", "Q1'18", "Q2'18", "Q3'18", "Q4'18", "Q1'19", "Q2'19", "Q3'19", "Q4'19", "Q1'20", "Q2'20", "Q3'20", "Q4'20", "Q1'21", "Q2'21", "Q3'21", "Q4'21", "Q1'22", "Q2'22", "Q3'22", "Q4'22", "Q1'23", "Q2'23", "Q3'23", "Q4'23", "Q1'24", "Q2'24", "Q3'24", "Q4'24", "Q1'25", "Q2'25", "Q3'25", "Q4'25", "Q2'26"];
-const WIX_V = [59.4, 63.3, 62.6, 67.4, 68.2, 65.6, 65.7, 55.6, 65.8, 61.4, 51.4, 37.0, 24.3, 24.4, 20.7, 27.7, 61.6, 67.3, 69.9, 63.4, 71.3, 68.0, 67.8, 64.3, 59.4, 59.5, 56.8, 49.1, 45.1, 51.7, 52.6, 63.3, 67.0, 60.5, 62.3, 65.3, 58.8, 69.7, 68.9, 65.6, 66.2, 65.5, 64.1, 69.7, 74.5, 78.9, 83.9, 82.5, 75.9, 77.4, 66.8, 62.3, 72.3, 62.7, 71.7, 67.1, 54.7, 44.8, 43.1, 53.9, 62.0, 83.8, 66.4, 54.7, 65.5, 50.4, 53.9, 46.9, 48.8, 44.7, 38.1, 47.9, 50.6, 54.5, 58.7, 55.0, 61.2, 61.9, 60.4, 65.5, 60.0];
+const WIX_V = [59.4, 63.3, 62.6, 67.4, 68.2, 64.9, 64.6, 54.4, 64.7, 60.2, 50.2, 35.8, 23.1, 23.2, 19.5, 26.5, 60.4, 66.1, 68.7, 62.2, 70.1, 66.8, 66.6, 63.1, 58.2, 58.3, 55.6, 47.9, 43.9, 50.5, 51.5, 62.1, 65.8, 59.3, 61.1, 64.1, 57.6, 68.5, 67.7, 64.4, 65.0, 64.3, 62.9, 68.5, 73.3, 77.7, 82.7, 81.3, 74.7, 76.2, 65.6, 61.1, 71.1, 61.7, 70.8, 66.0, 53.5, 43.6, 41.9, 52.7, 60.8, 82.6, 65.2, 53.5, 64.3, 49.2, 52.7, 45.7, 47.6, 43.5, 37.0, 46.8, 49.4, 53.3, 57.5, 53.8, 60.0, 60.7, 59.2, 64.3, 58.8];
 const WIX_RAW = {
   "bip": 0.9,
   "industrie": -0.8,
   "auftraege": -3.0,
   "exporte": -0.8,
   "handelsb": -15.73,
-  "alq": 3.9,
+  "alq": 6.4,
   "insolvenz": 7.2,
   "inflation": 2.3,
   "einzelhdl": -0.1,
@@ -266,7 +266,7 @@ const WIX_SCORES = {
   "auftraege": 20.0,
   "exporte": 40.0,
   "handelsb": 0,
-  "alq": 84.7,
+  "alq": 76.2,
   "insolvenz": 38.0,
   "inflation": 92.5,
   "einzelhdl": 48.8,
@@ -286,7 +286,7 @@ var INDS = [
   {k:"auftraege",de:"Auftragseingaenge",   en:"New Orders",        unit:"YoY %",wgt:"7%", c:"#4a8f6f",v:[-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0,-3.0]},
   {k:"exporte",  de:"Exporte",             en:"Exports",           unit:"YoY %",wgt:"8%", c:"#2a6099",v:[15.03,16.67,20.33,11.8,7.77,-1.3,-5.63,-4.9,-4.37,0.8,0.6,-2.2,0.57,-0.6,0.87,3.07]},
   {k:"handelsb", de:"Handelsbilanz",        en:"Trade Balance",     unit:"YoY %",wgt:"5%", c:"#1baf7a",v:[-49.51,-65.63,-71.68,0.47,94.41,323.94,624.42,116.28,42.93,39.81,4.25,-13.39,-19.15,-22.06,-15.78,-4.83]},
-  {k:"alq",      de:"Arbeitslosenquote",   en:"Unemployment",      unit:"%",    wgt:"14%",c:"#e34948",v:[3.23,3.1,3.1,3.1,3.03,3.0,3.07,3.17,3.23,3.4,3.4,3.43,3.57,3.7,3.8,3.9],lvl:true,ref:5},
+  {k:"alq",      de:"Arbeitslosenquote",   en:"Unemployment",      unit:"%",    wgt:"14%",c:"#e34948",v:[5.73,5.6,5.6,5.6,5.53,5.5,5.57,5.67,5.73,5.9,5.9,5.93,6.07,6.2,6.3,6.4],lvl:true,ref:5},
   {k:"insolvenz",de:"Insolvenzen",         en:"Insolvencies",      unit:"YoY %",wgt:"8%", c:"#8B0000",v:[-6.97,0.0,8.73,19.77,18.23,22.9,33.27,15.0,27.23,24.27,17.7,23.8,12.97,11.2,11.17,6.03]},
   {k:"inflation",de:"Inflationsrate",      en:"Inflation",         unit:"YoY %",wgt:"11%",c:"#d4880a",v:[6.07,8.23,9.4,10.83,8.77,6.9,5.73,3.03,2.7,2.57,2.13,2.53,2.57,2.1,2.1,2.3]},
   {k:"einzelhdl",de:"Einzelhandel",        en:"Retail Sales",      unit:"YoY %",wgt:"9%", c:"#c05882",v:[7.73,-1.57,-1.57,-4.43,-7.3,-2.53,-3.0,-1.33,0.2,-0.33,2.57,3.1,4.1,4.47,2.1,2.27]},
@@ -360,7 +360,7 @@ var SCORE_FN={
   auftraege:function(v){return clScore(50+v/5*50);},
   exporte:  function(v){return clScore(50+v/4*50);},
   handelsb: function(v){return clScore(50+v/10*50);},
-  alq:      function(v){return clScore(100-(v-3)*17);},
+  alq:      function(v){return clScore(100-(v-5)*17);},
   insolvenz:function(v){return clScore(50-v/30*50);},
   inflation:function(v){return clScore(100-Math.abs(v-2)*25);},
   einzelhdl:function(v){return clScore(50+v/4*50);},
@@ -407,7 +407,7 @@ function iMain(){
 function iTrend(){
   if(tc)tc.destroy();
   var tq=["Q1'17","Q2'17","Q3'17","Q4'17","Q1'18","Q2'18","Q3'18","Q4'18","Q1'19","Q2'19","Q3'19","Q4'19","Q1'20","Q2'20","Q3'20","Q4'20","Q1'21","Q2'21","Q3'21","Q4'21","Q1'22","Q2'22","Q3'22","Q4'22","Q1'23","Q2'23","Q3'23","Q4'23","Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"];
-  var tv=[74.5, 78.9, 83.9, 82.5, 75.9, 77.4, 66.8, 62.3, 72.3, 62.7, 71.7, 67.1, 54.7, 44.8, 43.1, 53.9, 62.0, 83.8, 66.4, 54.7, 65.5, 50.4, 53.9, 46.9, 48.8, 44.7, 38.1, 47.9, 50.6, 54.5, 58.7, 55.0, 61.2, 61.9, 60.4, 65.5];
+  var tv=[73.3, 77.7, 82.7, 81.3, 74.7, 76.2, 65.6, 61.1, 71.1, 61.7, 70.8, 66.0, 53.5, 43.6, 41.9, 52.7, 60.8, 82.6, 65.2, 53.5, 64.3, 49.2, 52.7, 45.7, 47.6, 43.5, 37.0, 46.8, 49.4, 53.3, 57.5, 53.8, 60.0, 60.7, 59.2, 64.3];
   var cf=12,ct=27;
   var incl=tv.map(function(w,i){return{i:i,w:w};}).filter(function(d){return d.i<cf||d.i>ct;});
   var n=incl.length,mX=incl.reduce(function(s,d){return s+d.i;},0)/n,mY=incl.reduce(function(s,d){return s+d.w;},0)/n;
@@ -433,7 +433,7 @@ function rInds(){
     el.innerHTML='<div class="it"><div class="in" style="color:'+d.c+'">'+name+'</div>'+
       '<div class="ibadges"><span class="idot" style="background:'+dotColor+'" title="Score '+score.toFixed(0)+'/100"></span><span class="iw">'+d.wgt+'</span></div></div>'+
       '<div class="iu">'+d.unit+'</div>'+
-      '<div class="ivrow"><span class="iv" style="color:'+d.c+'">'+cs+'</span>'+
+      '<div class="ivrow"><span class="iv" style="color:'+dotColor+'">'+cs+'</span>'+
       '<span class="iarrow" style="color:'+arrow.color+'">'+arrow.sym+'</span>'+
       '<span class="iscore">Score '+score.toFixed(0)+'/100</span></div>'+
       '<canvas id="ic_'+d.k+'" height="72"></canvas>';

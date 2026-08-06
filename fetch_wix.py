@@ -62,13 +62,21 @@ def quarterly_avg(monthly: dict) -> dict:
 
 def cl(v, lo=0, hi=100): return max(lo, min(hi, v))
 
+# ALQ-Näherung: Eurostat liefert nur die ILO-Erwerbslosenquote. Eine
+# automatisiert (ohne Login/Registrierung) abrufbare deutsche BA-Quote wurde
+# nicht gefunden (GENESIS-API verlangt einen registrierten Account, das
+# BA-Statistikportal hat keine stabile offene API) — mit dem Nutzer
+# abgestimmt: ILO-Quote + dokumentierter Aufschlag als Näherung an die
+# BA-Quote (liegt historisch ca. 2,3–2,7 Punkte über der ILO-Quote).
+BA_ILO_OFFSET = 2.5
+
 SCORING = {
     "bip":       lambda v: cl(50 + v / 3   * 50),   # BIP YoY %
     "industrie": lambda v: cl(50 + v / 5   * 50),   # Industrie YoY %
     "auftraege": lambda v: cl(50 + v / 5   * 50),   # Aufträge YoY %
     "exporte":   lambda v: cl(50 + v / 4   * 50),   # Exporte YoY %
     "handelsb":  lambda v: cl(50 + v / 10  * 50),   # Handelsbilanz YoY %
-    "alq":       lambda v: cl(100 - (v-3)  * 17),   # Arbeitslosenquote %
+    "alq":       lambda v: cl(100 - (v-5)  * 17),   # Arbeitslosenquote % (BA-Näherung, 5%=sehr gut)
     "insolvenz": lambda v: cl(50 - v / 30  * 50),   # Insolvenzen YoY % (invertiert)
     "inflation": lambda v: cl(100 - abs(v-2) * 25), # Inflation YoY %
     "einzelhdl": lambda v: cl(50 + v / 4   * 50),   # Einzelhandel YoY %
@@ -105,7 +113,7 @@ FALLBACK = {
     "auftraege": -3.0,   # Auftragseingänge YoY %
     "exporte":   -1.5,   # Exporte YoY %
     "handelsb":  -5.0,   # Handelsbilanz YoY-Veränderung %
-    "alq":        6.5,   # Arbeitslosenquote %
+    "alq":        6.5,   # Arbeitslosenquote % (BA-Näherung: ILO + 2,5)
     "insolvenz": 30.0,   # Insolvenzen YoY % (positiv = mehr = schlecht)
     "inflation":  2.2,   # VPI YoY %
     "einzelhdl": -2.5,   # Einzelhandel YoY %
@@ -120,8 +128,10 @@ FALLBACK = {
 # FALLBACK-Wert (kein Eurostat-Dataset verfügbar, siehe CLAUDE_HISTORIE.md).
 # Insolvenzen: sts_rb_m hat erst ab 2015-Q1 echte Daten; Quartale davor wurden
 # mit dem ältesten verfügbaren Wert aufgefüllt (siehe fetch_history.py backfill()).
+# ALQ: BA-Näherung (ILO + BA_ILO_OFFSET) über die gesamte Historie angewandt,
+# siehe CLAUDE_KARTEN.md Teil A.
 HIST_Q = ["Q1'06","Q2'06","Q3'06","Q4'06","Q1'07","Q2'07","Q3'07","Q4'07","Q1'08","Q2'08","Q3'08","Q4'08","Q1'09","Q2'09","Q3'09","Q4'09","Q1'10","Q2'10","Q3'10","Q4'10","Q1'11","Q2'11","Q3'11","Q4'11","Q1'12","Q2'12","Q3'12","Q4'12","Q1'13","Q2'13","Q3'13","Q4'13","Q1'14","Q2'14","Q3'14","Q4'14","Q1'15","Q2'15","Q3'15","Q4'15","Q1'16","Q2'16","Q3'16","Q4'16","Q1'17","Q2'17","Q3'17","Q4'17","Q1'18","Q2'18","Q3'18","Q4'18","Q1'19","Q2'19","Q3'19","Q4'19","Q1'20","Q2'20","Q3'20","Q4'20","Q1'21","Q2'21","Q3'21","Q4'21","Q1'22","Q2'22","Q3'22","Q4'22","Q1'23","Q2'23","Q3'23","Q4'23","Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"]
-HIST_V = [59.4,63.3,62.6,67.4,68.2,65.6,65.7,55.6,65.8,61.4,51.4,37.0,24.3,24.4,20.7,27.7,61.6,67.3,69.9,63.4,71.3,68.0,67.8,64.3,59.4,59.5,56.8,49.1,45.1,51.7,52.6,63.3,67.0,60.5,62.3,65.3,58.8,69.7,68.9,65.6,66.2,65.5,64.1,69.7,74.5,78.9,83.9,82.5,75.9,77.4,66.8,62.3,72.3,62.7,71.7,67.1,54.7,44.8,43.1,53.9,62.0,83.8,66.4,54.7,65.5,50.4,53.9,46.9,48.8,44.7,38.1,47.9,50.6,54.5,58.7,55.0,61.2,61.9,60.4,65.5]
+HIST_V = [59.4,63.3,62.6,67.4,68.2,64.9,64.6,54.4,64.7,60.2,50.2,35.8,23.1,23.2,19.5,26.5,60.4,66.1,68.7,62.2,70.1,66.8,66.6,63.1,58.2,58.3,55.6,47.9,43.9,50.5,51.5,62.1,65.8,59.3,61.1,64.1,57.6,68.5,67.7,64.4,65.0,64.3,62.9,68.5,73.3,77.7,82.7,81.3,74.7,76.2,65.6,61.1,71.1,61.7,70.8,66.0,53.5,43.6,41.9,52.7,60.8,82.6,65.2,53.5,64.3,49.2,52.7,45.7,47.6,43.5,37.0,46.8,49.4,53.3,57.5,53.8,60.0,60.7,59.2,64.3]
 
 # ── Daten holen ───────────────────────────────────────────────────────────────
 
@@ -164,11 +174,13 @@ def fetch_all() -> dict:
         r["handelsb"] = round((bal[cur] / abs(bal[prev]) - 1) * 100, 2) if bal.get(prev) else None
     print(f"     Exporte YoY: {r.get('exporte')}%  |  Handelsbilanz YoY: {r.get('handelsb')}%")
 
-    # 6. Arbeitslosenquote (monthly, ILO)
-    print("  6. Arbeitslosenquote...")
+    # 6. Arbeitslosenquote — BA-Näherung (siehe BA_ILO_OFFSET oben)
+    print("  6. Arbeitslosenquote (BA-Näherung = Eurostat-ILO + Aufschlag)...")
     s = eurostat_get("une_rt_m", {"geo":"DE","s_adj":"SA","age":"TOTAL","sex":"T","unit":"PC_ACT"})
-    _, r["alq"] = latest(s)
-    print(f"     {r['alq']}%")
+    _, ilo = latest(s)
+    if ilo is not None:
+        r["alq"] = round(ilo + BA_ILO_OFFSET, 2)
+    print(f"     ILO: {ilo}%  ->  BA-Näherung: {r.get('alq')}%")
 
     # 7. Unternehmensinsolvenzen YoY (monthly)
     # war: bsbs_ins_q (404, existiert nicht) -> sts_rb_m liefert die
