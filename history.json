@@ -2638,5 +2638,38 @@
       "produktiv": 67.5,
       "schulden": 82.5
     }
+  },
+  {
+    "quarter": "2026-Q1",
+    "label": "Q1'26",
+    "wix": 61.4,
+    "raw": {
+      "bip": 0.6,
+      "industrie": -1.8,
+      "auftraege": -3.0,
+      "exporte": 1.7,
+      "handelsb": 4.39,
+      "alq": 6.33,
+      "insolvenz": 6.67,
+      "inflation": 2.2,
+      "einzelhdl": 1.13,
+      "bau": -3.73,
+      "produktiv": 1.1,
+      "schulden": 64.4
+    },
+    "scores": {
+      "bip": 60.0,
+      "industrie": 32.0,
+      "auftraege": 20.0,
+      "exporte": 71.2,
+      "handelsb": 71.9,
+      "alq": 77.4,
+      "insolvenz": 38.9,
+      "inflation": 95.0,
+      "einzelhdl": 64.1,
+      "bau": 12.7,
+      "produktiv": 77.5,
+      "schulden": 78.0
+    }
   }
 ]

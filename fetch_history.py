@@ -21,7 +21,7 @@ from fetch_wix import SCORING, WEIGHTS, cl, FALLBACK, quarterly_avg, format_peri
 EUROSTAT = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
 
 START_Q = "2006-Q1"
-END_Q   = "2025-Q4"   # letztes vollständiges Quartal; danach übernimmt der Live-Fetch
+END_Q   = "2026-Q1"   # letztes vollständiges Quartal; danach übernimmt der Live-Fetch
 
 
 def eurostat_get_since(dataset: str, params: dict, since: str) -> dict:
@@ -140,6 +140,15 @@ def main():
     s = eurostat_get_since("prc_hicp_manr",
         {"geo":"DE","unit":"RCH_A","coicop":"CP00"}, "2006-01")
     series["inflation"] = quarterly_avg(s)
+    # prc_hicp_manr hinkt bei Eurostat z.T. mehrere Monate hinterher (Stand
+    # dieses Laufs: letzter Datenpunkt Dez. 2025, Datensatz seit Feb. 2026
+    # nicht aktualisiert) — für das dadurch fehlende aktuellste Quartal wird
+    # der ohnehin für diese Periode gepflegte FALLBACK-Wert verwendet, statt
+    # das ganze Quartal aus der Historie zu kippen.
+    if END_Q not in series["inflation"]:
+        print(f"  ↳ inflation: {END_Q} bei Eurostat noch nicht verfügbar (Publikations-Lag) "
+              f"— Fallback-Wert {FALLBACK['inflation']} verwendet")
+        series["inflation"][END_Q] = FALLBACK["inflation"]
 
     print("  9. Einzelhandel (monthly YoY -> Quartalsdurchschnitt)...")
     s = eurostat_get_since("sts_trtu_m",
