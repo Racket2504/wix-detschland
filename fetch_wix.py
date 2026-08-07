@@ -258,6 +258,7 @@ def build_json(raw: dict) -> dict:
     return {
         "version":        "2.0",
         "generated":      datetime.utcnow().isoformat() + "Z",
+        "updated":        datetime.utcnow().strftime("%Y-%m-%d"),  # Lauf-Datum des Bots
         "current_period": period_label,
         "current_wix":    wix,
         "zone":           zone,
@@ -286,6 +287,7 @@ def update_html(wix: dict):
 const WIX_CURRENT = {wix['current_wix']};
 const WIX_PERIOD  = "{wix['current_period']}";
 const WIX_ZONE    = "{wix['zone']}";
+const WIX_UPDATED = "{wix['updated']}";
 const WIX_Q = {json.dumps(h['quarters'])};
 const WIX_V = {json.dumps(h['values'])};
 const WIX_RAW = {json.dumps(r, indent=2)};

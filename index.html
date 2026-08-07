@@ -75,6 +75,7 @@ footer{background:#F4F3EE;border-top:1px solid #E3E2DB;padding:36px 0}
 .fb{font-family:Georgia,serif;font-size:16px;font-weight:700;margin-bottom:6px}
 .fb span{color:#1E4FAC}
 .fd{font-size:13px;color:#6B6960;line-height:1.6}
+.fauth{font-size:12px;color:#9E9C96;margin-top:8px}
 .fct{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9E9C96;margin-bottom:10px}
 .fl{list-style:none;display:flex;flex-direction:column;gap:6px}
 .fl a{color:#6B6960;font-size:13px;text-decoration:none}
@@ -122,6 +123,7 @@ footer{background:#F4F3EE;border-top:1px solid #E3E2DB;padding:36px 0}
       <span><strong data-de="Stand:" data-en="As of:">Stand:</strong> Q1 2026</span>
       <span><strong data-de="Update:" data-en="Update:">Update:</strong> <span data-de="Monatlich" data-en="Monthly">Monatlich</span></span>
       <span><strong>Basis:</strong> Destatis, BA, Eurostat</span>
+      <span><strong data-de="Zuletzt aktualisiert:" data-en="Last updated:">Zuletzt aktualisiert:</strong> <span id="wu-hero"></span></span>
     </div>
   </div>
 </div></div></section>
@@ -209,7 +211,7 @@ WIX = Summe (Score_i x Gewicht_i)</div>
 
 <footer><div class="c">
   <div class="fi">
-    <div><div class="fb">WIX<span>.</span>de</div><p class="fd" data-de="Wirtschafts-Index Deutschland - 12 harte Kennzahlen. Kein offizieller Index. Keine Anlageberatung." data-en="Germany Economic Index - 12 hard indicators. Not official. Not investment advice.">Wirtschafts-Index Deutschland - 12 harte Kennzahlen. Kein offizieller Index. Keine Anlageberatung.</p></div>
+    <div><div class="fb">WIX<span>.</span>de</div><p class="fd" data-de="Wirtschafts-Index Deutschland - 12 harte Kennzahlen. Kein offizieller Index. Keine Anlageberatung." data-en="Germany Economic Index - 12 hard indicators. Not official. Not investment advice.">Wirtschafts-Index Deutschland - 12 harte Kennzahlen. Kein offizieller Index. Keine Anlageberatung.</p><p class="fauth" data-de="Konzept &amp; Umsetzung: Andreas Macioßek" data-en="Concept &amp; implementation: Andreas Macioßek">Konzept &amp; Umsetzung: Andreas Macioßek</p></div>
     <div><div class="fct" data-de="Navigation" data-en="Navigation">Navigation</div>
       <ul class="fl"><li><a href="#aktuell" data-de="Aktuell" data-en="Current">Aktuell</a></li><li><a href="#verlauf" data-de="Verlauf" data-en="History">Verlauf</a></li><li><a href="#indikatoren" data-de="Indikatoren" data-en="Indicators">Indikatoren</a></li><li><a href="#methodik" data-de="Methodik" data-en="Methodology">Methodik</a></li></ul>
     </div>
@@ -217,7 +219,7 @@ WIX = Summe (Score_i x Gewicht_i)</div>
       <ul class="fl"><li><a href="https://www.destatis.de" target="_blank">Destatis</a></li><li><a href="https://statistik.arbeitsagentur.de" target="_blank">Bundesagentur f. Arbeit</a></li><li><a href="https://ec.europa.eu/eurostat" target="_blank">Eurostat</a></li><li><a href="https://www.bundesbank.de" target="_blank">Bundesbank</a></li></ul>
     </div>
   </div>
-  <div class="fbot"><span>© 2026 WIX Deutschland. Alle Angaben ohne Gewaehr.</span><span>Stand: Q1 2026</span></div>
+  <div class="fbot"><span>© 2026 WIX Deutschland. Alle Angaben ohne Gewaehr.</span><span>Stand: Q1 2026</span><span><span data-de="Zuletzt aktualisiert:" data-en="Last updated:">Zuletzt aktualisiert:</span> <span id="wu-footer"></span></span></div>
   <p class="disc" data-de="Der WIX ist kein offizieller staatlicher Index. Keine Anlageberatung oder wirtschaftspolitische Empfehlung." data-en="The WIX is not an official government index. Not investment advice or economic policy recommendation.">Der WIX ist kein offizieller staatlicher Index. Keine Anlageberatung oder wirtschaftspolitische Empfehlung.</p>
 </div></footer>
 
@@ -240,10 +242,11 @@ WIX = Summe (Score_i x Gewicht_i)</div>
 </script>
 <script>
 // === WIX DATA v2 — AUTO-AKTUALISIERT VON fetch_wix.py ===
-// Stand: 2026-08-06T11:11:41.623723Z UTC
+// Stand: 2026-08-07T10:01:04.995009Z UTC
 const WIX_CURRENT = 58.8;
 const WIX_PERIOD  = "Q2'26";
 const WIX_ZONE    = "Stabil";
+const WIX_UPDATED = "2026-08-07";
 const WIX_Q = ["Q1'06", "Q2'06", "Q3'06", "Q4'06", "Q1'07", "Q2'07", "Q3'07", "Q4'07", "Q1'08", "Q2'08", "Q3'08", "Q4'08", "Q1'09", "Q2'09", "Q3'09", "Q4'09", "Q1'10", "Q2'10", "Q3'10", "Q4'10", "Q1'11", "Q2'11", "Q3'11", "Q4'11", "Q1'12", "Q2'12", "Q3'12", "Q4'12", "Q1'13", "Q2'13", "Q3'13", "Q4'13", "Q1'14", "Q2'14", "Q3'14", "Q4'14", "Q1'15", "Q2'15", "Q3'15", "Q4'15", "Q1'16", "Q2'16", "Q3'16", "Q4'16", "Q1'17", "Q2'17", "Q3'17", "Q4'17", "Q1'18", "Q2'18", "Q3'18", "Q4'18", "Q1'19", "Q2'19", "Q3'19", "Q4'19", "Q1'20", "Q2'20", "Q3'20", "Q4'20", "Q1'21", "Q2'21", "Q3'21", "Q4'21", "Q1'22", "Q2'22", "Q3'22", "Q4'22", "Q1'23", "Q2'23", "Q3'23", "Q4'23", "Q1'24", "Q2'24", "Q3'24", "Q4'24", "Q1'25", "Q2'25", "Q3'25", "Q4'25", "Q2'26"];
 const WIX_V = [59.4, 63.3, 62.6, 67.4, 68.2, 64.9, 64.6, 54.4, 64.7, 60.2, 50.2, 35.8, 23.1, 23.2, 19.5, 26.5, 60.4, 66.1, 68.7, 62.2, 70.1, 66.8, 66.6, 63.1, 58.2, 58.3, 55.6, 47.9, 43.9, 50.5, 51.5, 62.1, 65.8, 59.3, 61.1, 64.1, 57.6, 68.5, 67.7, 64.4, 65.0, 64.3, 62.9, 68.5, 73.3, 77.7, 82.7, 81.3, 74.7, 76.2, 65.6, 61.1, 71.1, 61.7, 70.8, 66.0, 53.5, 43.6, 41.9, 52.7, 60.8, 82.6, 65.2, 53.5, 64.3, 49.2, 52.7, 45.7, 47.6, 43.5, 37.0, 46.8, 49.4, 53.3, 57.5, 53.8, 60.0, 60.7, 59.2, 64.3, 58.8];
 const WIX_RAW = {
@@ -317,13 +320,31 @@ var MD = [
 ];
 
 var lang = 'de';
+// WIX_UPDATED (YYYY-MM-DD): Lauf-Datum des Bots, von fetch_wix.py gesetzt.
+// Nicht zu verwechseln mit WIX_PERIOD (Quartal/Monat, auf das sich die Daten beziehen).
+var MONTHS_DE=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+var MONTHS_EN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function formatUpdated(iso){
+  if(!iso) return '';
+  var parts=iso.split('-');
+  if(parts.length!==3) return iso;
+  var y=+parts[0], m=+parts[1]-1, d=+parts[2];
+  if(isNaN(y)||isNaN(m)||isNaN(d)) return iso;
+  return lang==='de' ? (d+'. '+MONTHS_DE[m]+' '+y) : (MONTHS_EN[m]+' '+d+', '+y);
+}
+function renderUpdated(){
+  var iso=(typeof WIX_UPDATED!=='undefined'&&WIX_UPDATED) ? WIX_UPDATED : new Date().toISOString().slice(0,10);
+  var txt=formatUpdated(iso);
+  var h=document.getElementById('wu-hero');   if(h) h.textContent=txt;
+  var f=document.getElementById('wu-footer'); if(f) f.textContent=txt;
+}
 function setLang(l) {
   lang = l;
   document.documentElement.lang = l;
   document.querySelectorAll('[data-de]').forEach(function(el){el.innerHTML = l==='de' ? el.getAttribute('data-de') : el.getAttribute('data-en');});
   document.getElementById('btn-de').className = l==='de' ? 'on' : '';
   document.getElementById('btn-en').className = l==='en' ? 'on' : '';
-  rZones(); rMtbl(); rInds();
+  rZones(); rMtbl(); rInds(); renderUpdated();
   if(typeof Chart!=='undefined'){iMain();iTrend();}
 }
 
@@ -465,7 +486,7 @@ function rMtbl(){
 function initAll(){
   bGauge(WIX_CURRENT);
   document.getElementById("wv").textContent = String(WIX_CURRENT).replace(".",",");
-  rZones();rMtbl();rInds();
+  rZones();rMtbl();rInds();renderUpdated();
   // Warte auf Chart.js (max 50 Versuche = 5 Sekunden)
   var tries=0;
   function tryCharts(){
