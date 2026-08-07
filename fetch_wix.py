@@ -143,6 +143,11 @@ def fetch_all() -> dict:
     print("  1. BIP-Wachstum...")
     s = eurostat_get("namq_10_gdp", {"geo":"DE","unit":"CLV_PCH_SM","s_adj":"SCA","na_item":"B1GQ"})
     period, r["bip"] = latest(s)
+    # r["period"] wird als WIX_PERIOD ("Stand: ...") auf index.html angezeigt.
+    # Definition: das BIP-Quartal — eine der drei quartalsweisen Kernreihen
+    # (neben Produktivität, Schulden), an deren Takt die WIX-Berechnung hängt.
+    # Monatliche Indikatoren können einzeln aktueller sein, aber der
+    # Gesamt-WIX "gehört" ehrlicherweise zum jeweils neuesten Quartal.
     r["period"] = period
     print(f"     {period}: {r['bip']}%")
 

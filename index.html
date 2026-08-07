@@ -116,11 +116,11 @@ footer{background:#F4F3EE;border-top:1px solid #E3E2DB;padding:36px 0}
   <div>
     <div class="eye" data-de="Wirtschafts-Index Deutschland" data-en="Germany Economic Index">Wirtschafts-Index Deutschland</div>
     <div class="wn" id="wv">42,4</div>
-    <div class="ws" data-de="WIX-Wert Q1 2026 &middot; Skala 0-100" data-en="WIX Q1 2026 &middot; Scale 0-100">WIX-Wert Q1 2026 &middot; Skala 0-100</div>
-    <div class="zb" style="background:#FEF3DC;color:#d4880a">&#9888; <span data-de="Warnzone - strukturelle Defizite entstehen" data-en="Warning - structural deficits emerging">Warnzone - strukturelle Defizite entstehen</span></div>
+    <div class="ws"><span data-de="WIX-Wert" data-en="WIX">WIX-Wert</span> <span id="wp-ws"></span> <span data-de="&middot; Skala 0-100" data-en="&middot; Scale 0-100">&middot; Skala 0-100</span></div>
+    <div class="zb" id="zone-badge"><span id="zb-icon">&#9888;</span> <span id="zb-txt"></span></div>
     <p class="hd" data-de="Der WIX fasst 12 harte Kennzahlen der deutschen Wirtschaft zusammen. 9 Indikatoren werden monatlich aktualisiert. Ein Wert von 55 signalisiert strukturelle Schwaeche ohne akute Krise." data-en="The WIX aggregates 12 hard indicators of the German economy. 9 are updated monthly. A value of 55 signals structural weakness without acute crisis.">Der WIX fasst 12 harte Kennzahlen der deutschen Wirtschaft zusammen. 9 Indikatoren werden monatlich aktualisiert. Ein Wert von 55 signalisiert strukturelle Schwaeche ohne akute Krise.</p>
     <div class="hm">
-      <span><strong data-de="Stand:" data-en="As of:">Stand:</strong> Q1 2026</span>
+      <span><strong data-de="Stand:" data-en="As of:">Stand:</strong> <span id="wp-hm"></span></span>
       <span><strong data-de="Update:" data-en="Update:">Update:</strong> <span data-de="Monatlich" data-en="Monthly">Monatlich</span></span>
       <span><strong>Basis:</strong> Destatis, BA, Eurostat</span>
       <span><strong data-de="Zuletzt aktualisiert:" data-en="Last updated:">Zuletzt aktualisiert:</strong> <span id="wu-hero"></span></span>
@@ -219,7 +219,7 @@ WIX = Summe (Score_i x Gewicht_i)</div>
       <ul class="fl"><li><a href="https://www.destatis.de" target="_blank">Destatis</a></li><li><a href="https://statistik.arbeitsagentur.de" target="_blank">Bundesagentur f. Arbeit</a></li><li><a href="https://ec.europa.eu/eurostat" target="_blank">Eurostat</a></li><li><a href="https://www.bundesbank.de" target="_blank">Bundesbank</a></li></ul>
     </div>
   </div>
-  <div class="fbot"><span>© 2026 WIX Deutschland. Alle Angaben ohne Gewaehr.</span><span>Stand: Q1 2026</span><span><span data-de="Zuletzt aktualisiert:" data-en="Last updated:">Zuletzt aktualisiert:</span> <span id="wu-footer"></span></span></div>
+  <div class="fbot"><span>© 2026 WIX Deutschland. Alle Angaben ohne Gewaehr.</span><span><span data-de="Stand:" data-en="As of:">Stand:</span> <span id="wp-fbot"></span></span><span><span data-de="Zuletzt aktualisiert:" data-en="Last updated:">Zuletzt aktualisiert:</span> <span id="wu-footer"></span></span></div>
   <p class="disc" data-de="Der WIX ist kein offizieller staatlicher Index. Keine Anlageberatung oder wirtschaftspolitische Empfehlung." data-en="The WIX is not an official government index. Not investment advice or economic policy recommendation.">Der WIX ist kein offizieller staatlicher Index. Keine Anlageberatung oder wirtschaftspolitische Empfehlung.</p>
 </div></footer>
 
@@ -297,13 +297,19 @@ var INDS = [
   {k:"produktiv",de:"Produktivitaet",      en:"Productivity",      unit:"YoY %",wgt:"5%", c:"#888780",v:[2.2,0.1,0.5,-0.2,-1.4,-1.5,-1.5,-1.3,-0.3,-0.2,-0.2,0.4,0.3,0.6,0.5,0.7]},
   {k:"schulden", de:"Staatsschulden",      en:"Debt-to-GDP",       unit:"% BIP",wgt:"10%",c:"#2a78d6",v:[66.5,66.1,65.2,64.4,63.9,63.0,63.2,62.3,62.1,61.6,62.0,62.2,62.0,62.3,63.0,63.5],lvl:true,ref:60},
 ];
+// bg = helle Badge-Hintergrundfarbe je Zone. badge = kurzer Badge-Text (Hero),
+// icon = Badge-Symbol. "(aktuell)"/"(current)" wird NICHT mehr hier hinterlegt,
+// sondern von rZones() dynamisch an die Zone angehaengt, die zum aktuellen
+// WIX_CURRENT passt (siehe zoneIndex()) — sonst haengt die Markierung an der
+// falschen Zone, sobald sich der WIX-Wert aendert.
 var ZD = [
-  {c:"#1baf7a",de:{r:"70-100",l:"Gesund",t:"Komfortzone",d:"Steuereinnahmen wachsen, Sozialversicherungen im Ueberschuss, Spielraum fuer Investitionen."},en:{r:"70-100",l:"Healthy",t:"Comfort Zone",d:"Tax revenues grow, social insurance in surplus, room for investment."}},
-  {c:"#85b840",de:{r:"55-70", l:"Stabil", t:"Stabilitaetszone",d:"System kostendeckend ohne Puffer. Beitragssaetze stagnieren oder steigen leicht."},en:{r:"55-70", l:"Stable",  t:"Stability Zone",d:"System covers costs without buffer. Contribution rates stagnate or rise slightly."}},
-  {c:"#d4880a",de:{r:"42-55", l:"Warnung",t:"Warnzone (aktuell)",d:"Steuereinnahmen wachsen langsamer als Sozialausgaben. Defizitfinanzierung noetig. Schuldenbremse unter Druck."},en:{r:"42-55", l:"Warning",t:"Warning Zone (current)",d:"Tax revenues grow slower than social spending. Deficit financing needed. Debt brake under pressure."}},
-  {c:"#e34948",de:{r:"30-42", l:"Kritisch",t:"Kritische Zone",d:"Pflichtbeitraege naehern sich untragbaren Werten. Staatsverschuldung steigt schnell. Reale Rentenkürzungen unvermeidbar."},en:{r:"30-42", l:"Critical",t:"Critical Zone",d:"Contributions near untenable levels. National debt rises fast. Real pension cuts unavoidable."}},
-  {c:"#8B0000",de:{r:"0-30",  l:"Krise",  t:"Systemkrise",d:"Sozialleistungen nicht mehr finanzierbar. Harte Einschnitte unvermeidbar. Internationale Hilfe moeglich."},en:{r:"0-30",  l:"Crisis",  t:"System Crisis",d:"Social benefits no longer affordable. Drastic cuts unavoidable. International assistance possible."}},
+  {c:"#1baf7a",bg:"#E3F6EE",icon:"✓",badge:{de:"Gesunde Wirtschaftslage",en:"Healthy economy"},de:{r:"70-100",l:"Gesund",t:"Komfortzone",d:"Steuereinnahmen wachsen, Sozialversicherungen im Ueberschuss, Spielraum fuer Investitionen."},en:{r:"70-100",l:"Healthy",t:"Comfort Zone",d:"Tax revenues grow, social insurance in surplus, room for investment."}},
+  {c:"#85b840",bg:"#EEF5DF",icon:"✓",badge:{de:"Stabil, aber ohne Puffer",en:"Stable, but no buffer"},de:{r:"55-70", l:"Stabil", t:"Stabilitaetszone",d:"System kostendeckend ohne Puffer. Beitragssaetze stagnieren oder steigen leicht."},en:{r:"55-70", l:"Stable",  t:"Stability Zone",d:"System covers costs without buffer. Contribution rates stagnate or rise slightly."}},
+  {c:"#d4880a",bg:"#FEF3DC",icon:"⚠",badge:{de:"Warnzone - strukturelle Defizite",en:"Warning - structural deficits"},de:{r:"42-55", l:"Warnung",t:"Warnzone",d:"Steuereinnahmen wachsen langsamer als Sozialausgaben. Defizitfinanzierung noetig. Schuldenbremse unter Druck."},en:{r:"42-55", l:"Warning",t:"Warning Zone",d:"Tax revenues grow slower than social spending. Deficit financing needed. Debt brake under pressure."}},
+  {c:"#e34948",bg:"#FBE4E3",icon:"⚠",badge:{de:"Kritische Lage",en:"Critical condition"},de:{r:"30-42", l:"Kritisch",t:"Kritische Zone",d:"Pflichtbeitraege naehern sich untragbaren Werten. Staatsverschuldung steigt schnell. Reale Rentenkürzungen unvermeidbar."},en:{r:"30-42", l:"Critical",t:"Critical Zone",d:"Contributions near untenable levels. National debt rises fast. Real pension cuts unavoidable."}},
+  {c:"#8B0000",bg:"#F3D9D9",icon:"⚠",badge:{de:"Systemkrise",en:"System crisis"},de:{r:"0-30",  l:"Krise",  t:"Systemkrise",d:"Sozialleistungen nicht mehr finanzierbar. Harte Einschnitte unvermeidbar. Internationale Hilfe moeglich."},en:{r:"0-30",  l:"Crisis",  t:"System Crisis",d:"Social benefits no longer affordable. Drastic cuts unavoidable. International assistance possible."}},
 ];
+function zoneIndex(w){ return w>=70?0 : w>=55?1 : w>=42?2 : w>=30?3 : 4; }
 var MD = [
   {de:["BIP-Wachstum","9%","Quartal"],en:["GDP Growth","9%","Quarterly"]},
   {de:["Industrieproduktion","9%","Monatl."],en:["Industrial Output","9%","Monthly"]},
@@ -332,6 +338,21 @@ function formatUpdated(iso){
   if(isNaN(y)||isNaN(m)||isNaN(d)) return iso;
   return lang==='de' ? (d+'. '+MONTHS_DE[m]+' '+y) : (MONTHS_EN[m]+' '+d+', '+y);
 }
+// "Stand: <Quartal>" = das jeweils AKTUELLSTE Quartal, fuer das eine der drei
+// quartalsweisen Kernreihen (BIP/Produktivitaet/Schulden) vorliegt — konkret
+// das BIP-Quartal, das fetch_wix.py in WIX_PERIOD schreibt. Das ist die
+// ehrlichste einheitliche Definition, weil die WIX-Berechnung selbst an
+// diesem Quartalstakt haengt (die monatlichen Indikatoren laufen einzeln oft
+// weiter, aber der Gesamt-WIX "gehoert" zum jeweils neuesten Quartal).
+// Nicht zu verwechseln mit WIX_UPDATED (Lauf-Datum des Bots, siehe oben).
+function expandQuarterLabel(q){
+  var m=/^Q(\d)'(\d{2})$/.exec(q);
+  return m ? ('Q'+m[1]+' 20'+m[2]) : q;
+}
+function renderPeriod(){
+  var q=(typeof WIX_PERIOD!=='undefined'&&WIX_PERIOD) ? expandQuarterLabel(WIX_PERIOD) : '';
+  ['wp-ws','wp-hm','wp-fbot'].forEach(function(id){var el=document.getElementById(id); if(el) el.textContent=q;});
+}
 function renderUpdated(){
   var iso=(typeof WIX_UPDATED!=='undefined'&&WIX_UPDATED) ? WIX_UPDATED : new Date().toISOString().slice(0,10);
   var txt=formatUpdated(iso);
@@ -344,7 +365,7 @@ function setLang(l) {
   document.querySelectorAll('[data-de]').forEach(function(el){el.innerHTML = l==='de' ? el.getAttribute('data-de') : el.getAttribute('data-en');});
   document.getElementById('btn-de').className = l==='de' ? 'on' : '';
   document.getElementById('btn-en').className = l==='en' ? 'on' : '';
-  rZones(); rMtbl(); rInds(); renderUpdated();
+  rZones(); rMtbl(); rInds(); renderUpdated(); renderZoneBadge(); renderPeriod();
   if(typeof Chart!=='undefined'){iMain();iTrend();}
 }
 
@@ -475,7 +496,19 @@ function rInds(){
 
 function rZones(){
   var c=document.getElementById('zs');c.innerHTML='';
-  ZD.forEach(function(z){var t=z[lang];var el=document.createElement('div');el.className='zc';el.innerHTML='<div class="zb2" style="background:'+z.c+'"><div class="zr">'+t.r+'</div><div class="zl">'+t.l+'</div></div><div class="zbd"><div class="zt" style="color:'+z.c+'">'+t.t+'</div><div class="zd">'+t.d+'</div></div>';c.appendChild(el);});
+  var curZi=(typeof WIX_CURRENT!=='undefined')?zoneIndex(WIX_CURRENT):-1;
+  ZD.forEach(function(z,i){var t=z[lang];var suffix=(i===curZi)?(lang==='de'?' (aktuell)':' (current)'):'';var el=document.createElement('div');el.className='zc';el.innerHTML='<div class="zb2" style="background:'+z.c+'"><div class="zr">'+t.r+'</div><div class="zl">'+t.l+'</div></div><div class="zbd"><div class="zt" style="color:'+z.c+'">'+t.t+suffix+'</div><div class="zd">'+t.d+'</div></div>';c.appendChild(el);});
+}
+// Zonen-Badge im Hero: Text UND Farbe leiten sich aus WIX_CURRENT + ZD ab
+// (dieselbe Quelle wie die Schwellenwerte-Karten oben), damit beide immer
+// konsistent sind — kein hartkodierter Text mehr.
+function renderZoneBadge(){
+  if(typeof WIX_CURRENT==='undefined') return;
+  var z=ZD[zoneIndex(WIX_CURRENT)];
+  var b=document.getElementById('zone-badge');
+  if(b){ b.style.background=z.bg; b.style.color=z.c; }
+  var icon=document.getElementById('zb-icon'); if(icon) icon.textContent=z.icon;
+  var txt=document.getElementById('zb-txt');   if(txt) txt.textContent=z.badge[lang];
 }
 
 function rMtbl(){
@@ -486,7 +519,7 @@ function rMtbl(){
 function initAll(){
   bGauge(WIX_CURRENT);
   document.getElementById("wv").textContent = String(WIX_CURRENT).replace(".",",");
-  rZones();rMtbl();rInds();renderUpdated();
+  rZones();rMtbl();rInds();renderUpdated();renderZoneBadge();renderPeriod();
   // Warte auf Chart.js (max 50 Versuche = 5 Sekunden)
   var tries=0;
   function tryCharts(){
