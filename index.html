@@ -76,13 +76,17 @@ footer{background:#F4F3EE;border-top:1px solid #E3E2DB;padding:36px 0}
 .fb span{color:#1E4FAC}
 .fd{font-size:13px;color:#6B6960;line-height:1.6}
 .fauth{font-size:12px;color:#9E9C96;margin-top:8px}
+.author-box{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #E3E2DB;border-radius:6px;padding:16px 18px;margin-top:24px}
+.author-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;flex:none;background:#F4F3EE}
+.author-name{font-weight:700;font-size:14px;margin-bottom:2px}
+.author-role{font-size:12px;color:#6B6960}
 .fct{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9E9C96;margin-bottom:10px}
 .fl{list-style:none;display:flex;flex-direction:column;gap:6px}
 .fl a{color:#6B6960;font-size:13px;text-decoration:none}
 .fl a:hover{color:#1E4FAC}
 .fbot{margin-top:28px;padding-top:16px;border-top:1px solid #E3E2DB;display:flex;justify-content:space-between;font-size:12px;color:#9E9C96}
 .disc{margin-top:10px;font-size:11px;color:#9E9C96;line-height:1.5}
-@media(max-width:720px){.hi{grid-template-columns:1fr}.wn{font-size:56px}.nav{display:none}.mg{grid-template-columns:1fr}.fi{grid-template-columns:1fr}.zc{grid-template-columns:70px 1fr}}
+@media(max-width:720px){.hi{grid-template-columns:1fr}.wn{font-size:56px}.nav{display:none}.mg{grid-template-columns:1fr}.fi{grid-template-columns:1fr}.zc{grid-template-columns:70px 1fr}.author-box{flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
@@ -205,6 +209,13 @@ WIX = Summe (Score_i x Gewicht_i)</div>
         <li><span data-de="Arbeitslosenquote: Eurostat (ILO-Quote) + Naeherungs-Aufschlag (~2,5 Punkte) auf BA-Niveau — keine offene, automatisierbare BA/Destatis-Quelle ohne Registrierung gefunden" data-en="Unemployment rate: Eurostat (ILO rate) + approximation offset (~2.5 points) to German BA (national) level — no open, automatable BA/Destatis source found without registration">Arbeitslosenquote: Eurostat (ILO-Quote) + Naeherungs-Aufschlag (~2,5 Punkte) auf BA-Niveau — keine offene, automatisierbare BA/Destatis-Quelle ohne Registrierung gefunden</span></li>
         <li><span data-de="Eurostat - Exporte, Handelsbilanz, Insolvenzen, Produktivitaet, Schuldenquote" data-en="Eurostat - Exports, Trade Balance, Insolvencies, Productivity, Debt-to-GDP">Eurostat - Exporte, Handelsbilanz, Insolvenzen, Produktivitaet, Schuldenquote</span></li>
       </ul>
+    </div>
+  </div>
+  <div class="author-box">
+    <img class="author-photo" src="autor.jpg" alt="Andreas Macioßek" onerror="this.style.display='none'">
+    <div>
+      <div class="author-name">Andreas Macioßek</div>
+      <div class="author-role" data-de="Konzept, Datenmodell und Umsetzung des WIX Deutschland" data-en="Concept, data model and implementation of the WIX Germany">Konzept, Datenmodell und Umsetzung des WIX Deutschland</div>
     </div>
   </div>
 </div></section>
