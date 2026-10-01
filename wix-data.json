@@ -1,9 +1,9 @@
 {
   "version": "2.0",
-  "generated": "2026-09-01T08:15:46.873698Z",
-  "updated": "2026-09-01",
+  "generated": "2026-10-01T15:15:40.913681Z",
+  "updated": "2026-10-01",
   "current_period": "Q2'26",
-  "current_wix": 69.6,
+  "current_wix": 64.7,
   "zone": "Stabil",
   "weights": {
     "bip": 0.09,
@@ -21,29 +21,29 @@
   },
   "raw": {
     "bip": 1.0,
-    "industrie": -0.5,
+    "industrie": -2.2,
     "auftraege": -3.0,
-    "exporte": 13.8,
-    "handelsb": 12.58,
-    "alq": 6.4,
-    "insolvenz": -1.5,
+    "exporte": 6.1,
+    "handelsb": 25.02,
+    "alq": 6.5,
+    "insolvenz": 15.3,
     "inflation": 2.3,
-    "einzelhdl": 0.1,
-    "bau": 1.6,
+    "einzelhdl": -0.4,
+    "bau": 1.0,
     "produktiv": 1.5,
     "schulden": 64.4
   },
   "scores": {
     "bip": 66.7,
-    "industrie": 45.0,
+    "industrie": 28.0,
     "auftraege": 20.0,
     "exporte": 100,
     "handelsb": 100,
-    "alq": 76.2,
-    "insolvenz": 52.5,
+    "alq": 74.5,
+    "insolvenz": 24.5,
     "inflation": 92.5,
-    "einzelhdl": 51.2,
-    "bau": 66.0,
+    "einzelhdl": 45.0,
+    "bau": 60.0,
     "produktiv": 87.5,
     "schulden": 78.0
   },
@@ -214,7 +214,7 @@
       59.2,
       64.3,
       61.4,
-      69.6
+      64.7
     ]
   }
 }
