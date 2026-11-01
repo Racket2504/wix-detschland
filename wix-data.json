@@ -1,10 +1,10 @@
 {
   "version": "2.0",
-  "generated": "2026-10-01T15:15:40.913681Z",
-  "updated": "2026-10-01",
-  "current_period": "Q2'26",
-  "current_wix": 64.7,
-  "zone": "Stabil",
+  "generated": "2026-11-01T14:51:25.113420Z",
+  "updated": "2026-11-01",
+  "current_period": "Q3'26",
+  "current_wix": 70.8,
+  "zone": "Gesund",
   "weights": {
     "bip": 0.09,
     "industrie": 0.09,
@@ -20,32 +20,32 @@
     "schulden": 0.1
   },
   "raw": {
-    "bip": 1.0,
-    "industrie": -2.2,
+    "bip": 1.2,
+    "industrie": 0.4,
     "auftraege": -3.0,
-    "exporte": 6.1,
-    "handelsb": 25.02,
-    "alq": 6.5,
-    "insolvenz": 15.3,
+    "exporte": 7.1,
+    "handelsb": 14.28,
+    "alq": 6.6,
+    "insolvenz": 8.3,
     "inflation": 2.3,
     "einzelhdl": -0.4,
-    "bau": 1.0,
-    "produktiv": 1.5,
-    "schulden": 64.4
+    "bau": 10.5,
+    "produktiv": 1.7,
+    "schulden": 63.4
   },
   "scores": {
-    "bip": 66.7,
-    "industrie": 28.0,
+    "bip": 70.0,
+    "industrie": 54.0,
     "auftraege": 20.0,
     "exporte": 100,
     "handelsb": 100,
-    "alq": 74.5,
-    "insolvenz": 24.5,
+    "alq": 72.8,
+    "insolvenz": 36.2,
     "inflation": 92.5,
     "einzelhdl": 45.0,
-    "bau": 60.0,
-    "produktiv": 87.5,
-    "schulden": 78.0
+    "bau": 100,
+    "produktiv": 92.5,
+    "schulden": 83.0
   },
   "history": {
     "quarters": [
@@ -130,7 +130,7 @@
       "Q3'25",
       "Q4'25",
       "Q1'26",
-      "Q2'26"
+      "Q3'26"
     ],
     "values": [
       59.4,
@@ -214,7 +214,7 @@
       59.2,
       64.3,
       61.4,
-      64.7
+      70.8
     ]
   }
 }
